@@ -124,7 +124,7 @@ export default function TechSphere() {
             ctx.globalAlpha = opacity;
             
             // Text - BIGGER and BOLDER
-            ctx.font = `800 ${34 * p.scale}px "Outfit", sans-serif`; 
+            ctx.font = `800 ${26 * p.scale}px "Outfit", sans-serif`; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             

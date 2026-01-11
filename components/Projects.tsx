@@ -68,7 +68,7 @@ export default function Projects() {
       <div className="pt-12 pb-6 px-6 md:px-12 max-w-7xl mx-auto">
          <span className="text-blue-500 font-mono text-xs tracking-widest uppercase mb-2 block">// Deployment Log</span>
          <h2 className="text-4xl md:text-6xl font-bold text-white font-heading">
-            <CipherReveal text="Case" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"><CipherReveal text="Studies" delay={0.2} /></span>
+            Case <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Studies</span>
          </h2>
       </div>
 

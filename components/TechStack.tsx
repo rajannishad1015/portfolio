@@ -13,7 +13,7 @@ export default function TechStack() {
         {/* Header */}
         <div className="text-center mb-8 relative z-20">
             <h2 className="text-3xl md:text-5xl font-bold text-white font-heading mb-2">
-                <CipherReveal text="Neural" /> <span className="text-blue-500"><CipherReveal text="System" delay={0.2} /></span>
+                Neural <span className="text-blue-500">System</span>
             </h2>
             <p className="text-xs font-mono text-blue-400/50 uppercase tracking-[0.3em]">Operational Tech Architecture</p>
         </div>

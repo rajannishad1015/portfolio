@@ -13,7 +13,7 @@ export default function About() {
             <div className="mb-20 max-w-2xl">
                 <span className="text-blue-500 font-mono text-xs tracking-widest uppercase mb-2 block">// Mission Profile</span>
                 <h2 className="text-4xl md:text-5xl font-bold text-white font-heading leading-tight mb-6">
-                    <CipherReveal text="Operational" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"><CipherReveal text="History" delay={0.2} /></span>
+                    Operational <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">History</span>
                 </h2>
                 <p className="text-lg text-gray-400 leading-relaxed font-light">
                     I am a Data Scientist bridging the gap between theoretical AI and production engineering. 
