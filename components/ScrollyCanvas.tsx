@@ -19,32 +19,43 @@ export default function ScrollyCanvas() {
   );
 
   useEffect(() => {
-    // Preload all images
     const loadImages = async () => {
-      const loadedImages: HTMLImageElement[] = [];
-      const promises: Promise<void>[] = [];
-
-      for (let i = 0; i < FRAME_COUNT; i++) {
-        const promise = new Promise<void>((resolve, reject) => {
-          const img = new Image();
-          const frameNumber = i.toString().padStart(2, "0");
-          img.src = `/sequence/frame_${frameNumber}.png`;
-          img.onload = () => {
-            loadedImages[i] = img;
-            resolve();
-          };
-          img.onerror = reject;
+        // 1. Load the first image IMMEDIATELY for instant visual
+        const firstImg = new Image();
+        firstImg.src = `/sequence/frame_00.png`;
+        
+        await new Promise<void>((resolve, reject) => {
+             firstImg.onload = () => resolve();
+             firstImg.onerror = reject;
         });
-        promises.push(promise);
-      }
 
-      try {
-        await Promise.all(promises);
-        setImages(loadedImages);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error("Failed to load images", error);
-      }
+        // Set initial image state so it renders ASAP
+        setImages((prev) => {
+            const newImages = [...prev];
+            newImages[0] = firstImg;
+            return newImages;
+        });
+        setIsLoaded(true); // Allow rendering to start
+
+        // 2. Load the rest in background
+        const promises: Promise<void>[] = [];
+        for (let i = 1; i < FRAME_COUNT; i++) {
+            const promise = new Promise<void>((resolve, reject) => {
+                const img = new Image();
+                const frameNumber = i.toString().padStart(2, "0");
+                img.src = `/sequence/frame_${frameNumber}.png`;
+                img.onload = () => {
+                    setImages((prev) => {
+                        const clone = [...prev];
+                        clone[i] = img;
+                        return clone;
+                    });
+                    resolve();
+                };
+                img.onerror = reject;
+            });
+            promises.push(promise);
+        }
     };
 
     loadImages();
@@ -52,7 +63,8 @@ export default function ScrollyCanvas() {
 
   const renderFrame = (index: number) => {
     const canvas = canvasRef.current;
-    if (!canvas || !isLoaded || !images[index]) return;
+    // We allow rendering if we have the SPECIFIC image needed, even if not fully loaded
+    if (!canvas || !images[index]) return; 
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -77,34 +89,37 @@ export default function ScrollyCanvas() {
 
   useMotionValueEvent(frameIndex, "change", (latest) => {
     const index = Math.round(latest);
-    renderFrame(index);
+    // Fallback to frame 0 if current frame isn't loaded yet
+    if (images[index]) {
+        renderFrame(index);
+    } else if (images[0]) {
+        renderFrame(0);
+    }
   });
 
   // Initial render when loaded
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && images[0]) {
       renderFrame(0);
     }
-  }, [isLoaded]);
+  }, [isLoaded, images]);
 
   // Handle resize
   useEffect(() => {
     const handleResize = () => {
-      if (isLoaded) renderFrame(Math.round(frameIndex.get()));
+        const idx = Math.round(frameIndex.get());
+        if (images[idx]) renderFrame(idx);
+        else if (images[0]) renderFrame(0);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isLoaded, frameIndex]);
+  }, [isLoaded, frameIndex, images]);
 
   return (
     <div className="h-[500vh] relative">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
         <canvas ref={canvasRef} className="block w-full h-full object-cover" />
-        {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center text-white/20">
-            Loading...
-          </div>
-        )}
+        {/* Removed "Loading..." text since we render frame 0 almost instantly */}
       </div>
     </div>
   );

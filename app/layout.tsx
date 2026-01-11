@@ -4,7 +4,6 @@ import "./globals.css";
 import Noise from "@/components/Noise";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
-import Preloader from "@/components/Preloader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -22,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`}>
-        <Preloader />
         <CustomCursor />
         <SmoothScroll />
         <Noise />
