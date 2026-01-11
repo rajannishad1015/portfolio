@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import CipherReveal from './CipherReveal';
+
 
 export default function About() {
   return (

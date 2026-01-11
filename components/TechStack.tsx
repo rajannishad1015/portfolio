@@ -1,5 +1,5 @@
 import TechSphere from './TechSphere';
-import CipherReveal from './CipherReveal';
+
 
 export default function TechStack() {
   return (

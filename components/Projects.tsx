@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef } from 'react';
-import CipherReveal from './CipherReveal';
+
 
 const projects = [
   {
