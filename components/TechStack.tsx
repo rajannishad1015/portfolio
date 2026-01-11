@@ -3,7 +3,7 @@ import CipherReveal from './CipherReveal';
 
 export default function TechStack() {
   return (
-    <section className="py-12 bg-[#050505] relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh]" id="stack">
+    <section className="py-12 bg-[#050505] relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh]" id="expertise">
       {/* Background Gradients */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#121212_0%,#000000_100%)] z-0" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] z-0 opacity-30" />

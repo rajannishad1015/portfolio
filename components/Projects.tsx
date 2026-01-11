@@ -63,7 +63,7 @@ export default function Projects() {
   });
 
   return (
-    <section ref={containerRef} className="bg-[#050505] relative z-20" id="projects">
+    <section ref={containerRef} className="bg-[#050505] relative z-20" id="work">
       {/* Header */}
       <div className="pt-12 pb-6 px-6 md:px-12 max-w-7xl mx-auto">
          <span className="text-blue-500 font-mono text-xs tracking-widest uppercase mb-2 block">// Deployment Log</span>

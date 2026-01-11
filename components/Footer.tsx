@@ -11,6 +11,7 @@ export default function Footer() {
         className="relative bg-[#050505] border-t border-white/10 h-[50vh] flex flex-col items-center justify-center overflow-hidden"
         onMouseMove={(e) => mouseX.set(e.pageX)}
         onMouseLeave={() => mouseX.set(Infinity)}
+        id="contact"
     >
         {/* Ambient Glow */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_100%,rgba(59,130,246,0.15),transparent_70%)]" />
