@@ -51,7 +51,7 @@ export default function Overlay() {
                     style={{ y: useTransform(scrollYProgress, [0, 1], [0, -200]) }}
                     className="h-full flex flex-col justify-center opacity-[0.03] select-none"
                 >
-                    <h1 className="text-[15vh] leading-none font-black font-heading tracking-tighter text-transparent [-webkit-text-stroke:2px_white] [writing-mode:vertical-rl] rotate-180">
+                    <h1 className="text-[10vh] md:text-[15vh] leading-none font-black font-heading tracking-tighter text-transparent [-webkit-text-stroke:2px_white] [writing-mode:vertical-rl] rotate-180">
                         NEURAL OPERATIONS
                     </h1>
                 </motion.div>
@@ -60,7 +60,7 @@ export default function Overlay() {
                     style={{ y: useTransform(scrollYProgress, [0, 1], [0, -400]) }}
                     className="h-full flex flex-col justify-center opacity-[0.03] select-none"
                 >
-                    <h1 className="text-[15vh] leading-none font-black font-heading tracking-tighter text-transparent [-webkit-text-stroke:2px_white] [writing-mode:vertical-rl] rotate-180">
+                    <h1 className="text-[10vh] md:text-[15vh] leading-none font-black font-heading tracking-tighter text-transparent [-webkit-text-stroke:2px_white] [writing-mode:vertical-rl] rotate-180">
                         SYSTEM ARCHITECTURE
                     </h1>
                 </motion.div>
@@ -145,7 +145,7 @@ export default function Overlay() {
         style={{ y: y2, opacity: opacity2 }}
         className="h-screen flex items-center justify-center md:justify-start px-6 md:px-32 sticky top-0"
       >
-        <div className="relative z-10 max-w-2xl mt-32 md:mt-0 pointer-events-auto">
+        <div className="relative z-10 max-w-2xl mt-12 md:mt-0 pointer-events-auto">
             {/* The Slate Container */}
             <div className="relative bg-[#0a0a0a]/90 backdrop-blur-md border border-white/10 p-8 md:p-12 overflow-hidden group">
                 {/* Circuit Background */}
@@ -203,7 +203,7 @@ export default function Overlay() {
         style={{ y: y3, opacity: opacity3 }}
         className="h-screen flex items-center justify-center md:justify-end px-6 md:px-32 sticky top-0"
       >
-         <div className="pointer-events-auto z-20 w-full max-w-xl mt-32 md:mt-0">
+         <div className="pointer-events-auto z-20 w-full max-w-xl mt-12 md:mt-0">
              {/* Header */}
              <div className="flex items-end justify-between mb-10 border-b border-white/10 pb-4">
                  <div>

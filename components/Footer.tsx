@@ -23,6 +23,38 @@ export default function Footer() {
             <p className="text-white/40 font-mono text-sm">Initialize sequence for collaboration.</p>
         </div>
 
+        {/* INTERACTIVE TERMINAL */}
+        <div className="relative z-20 w-full max-w-lg mb-8 px-4">
+             <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 font-mono text-xs md:text-sm text-gray-300 shadow-2xl">
+                 <div className="flex items-center gap-2 mb-3 border-b border-white/5 pb-2">
+                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+                     <span className="ml-auto text-white/20 text-[10px]">guest@rajan-portfolio ~</span>
+                 </div>
+                 <div className="space-y-1">
+                     <div className="text-white/50">Type &apos;hello&apos; to initiate handshake...</div>
+                     <div className="flex items-center gap-2">
+                         <span className="text-blue-500">$</span>
+                         <input 
+                            type="text" 
+                            placeholder="Enter command..."
+                            className="bg-transparent border-none outline-none text-blue-400 w-full placeholder:text-white/10"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    const val = e.currentTarget.value.trim().toLowerCase();
+                                    if (val) {
+                                        window.location.href = `mailto:rajannishad1015@gmail.com?subject=Terminal Command: ${val}`;
+                                        e.currentTarget.value = 'TRANSMITTING...';
+                                    }
+                                }
+                            }}
+                         />
+                     </div>
+                 </div>
+             </div>
+        </div>
+
         {/* THE DOCK */}
         <div className="relative z-20 mx-auto flex h-16 items-end gap-4 rounded-2xl bg-white/5 px-4 pb-3 border border-white/10 backdrop-blur-md">
             {ICONS.map((icon) => (

@@ -105,23 +105,23 @@ function Card({ i, project, progress, range, targetScale }: { i: number, project
     <div ref={container} className="h-screen flex items-center justify-center sticky top-0 md:top-12">
       <motion.div 
         style={{ scale, top: `calc(-5vh + ${i * 25}px)` }} 
-        className="relative flex flex-col w-full max-w-4xl h-[60vh] md:h-[500px] rounded-3xl bg-[#0F0F0F] border border-white/10 overflow-hidden shadow-2xl origin-top"
+        className="relative flex flex-col w-full max-w-4xl min-h-[550px] md:h-[500px] h-auto rounded-3xl bg-[#0F0F0F] border border-white/10 overflow-hidden shadow-2xl origin-top"
       >
         {/* Dynamic Accent Color Border Top */}
         <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: project.color }} />
 
         <div className="flex flex-col md:flex-row h-full">
             {/* Left: Content */}
-            <div className="flex-1 p-8 md:p-12 flex flex-col justify-between relative z-10 bg-[#0F0F0F]">
+            <div className="flex-1 p-6 md:p-12 flex flex-col justify-between relative z-10 bg-[#0F0F0F]">
                 <div>
                    <div className="flex items-center gap-3 mb-4">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: project.color }} />
                       <span className="text-xs font-mono uppercase tracking-widest text-white/50">{project.category}</span>
                    </div>
-                   <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 font-heading leading-tight">
+                   <h3 className="text-2xl md:text-4xl font-bold text-white mb-4 md:mb-6 font-heading leading-tight">
                         {project.title}
                    </h3>
-                   <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-8 font-light">
+                   <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-6 md:mb-8 font-light">
                         {project.description}
                    </p>
                 </div>
@@ -136,7 +136,7 @@ function Card({ i, project, progress, range, targetScale }: { i: number, project
             </div>
 
             {/* Right: Abstract Visual / Stats */}
-            <div className="flex-1 relative bg-gradient-to-br from-[#111] to-[#050505] p-8 md:p-12 border-l border-white/5 flex flex-col justify-center gap-6 overflow-hidden group">
+            <div className="flex-1 relative bg-gradient-to-br from-[#111] to-[#050505] p-6 md:p-12 border-t md:border-t-0 md:border-l border-white/5 flex flex-col justify-center gap-6 overflow-hidden group">
                  {/* Decorative Noise */}
                  <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
                  
