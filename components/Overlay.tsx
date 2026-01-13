@@ -123,9 +123,10 @@ export default function Overlay() {
                     Data Scientist & Machine Learning Engineer crafting intelligence from chaos.
                 </p>
 
-                <div 
+                <a 
+                    href="/resume.pdf"
+                    download="Rajan_Nishad_Resume.pdf"
                     className="flex items-center gap-4 cursor-pointer group"
-                    onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                 >
                     <div className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center group-hover:border-white/50 transition-colors">
                         <motion.div 
@@ -135,7 +136,7 @@ export default function Overlay() {
                         />
                     </div>
                     <span className="text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">Resume Mission</span>
-                </div>
+                </a>
             </motion.div>
         </div>
       </motion.div>

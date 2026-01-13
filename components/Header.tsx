@@ -88,6 +88,7 @@ export default function Header() {
           {/* Resume Button */}
           <a 
             href="/resume.pdf" 
+            download="Rajan_Nishad_Resume.pdf"
             className="relative z-10 flex items-center gap-2 px-5 py-2.5 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-blue-500 hover:text-white transition-all duration-300 group ml-auto md:ml-0"
           >
             <span>Resume</span>

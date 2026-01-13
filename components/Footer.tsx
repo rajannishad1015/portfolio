@@ -92,6 +92,7 @@ function DockIcon({ mouseX, label, url, path }: { mouseX: MotionValue; label: st
     <motion.a
       ref={ref}
       href={url}
+      download={label === 'Resume' ? 'Rajan_Nishad_Resume.pdf' : undefined}
       style={{ width }}
       className="aspect-square flex flex-col items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/5 relative group"
     >
