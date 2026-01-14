@@ -6,6 +6,16 @@ import Footer from "@/components/Footer";
 import TechStack from "@/components/TechStack";
 import About from "@/components/About";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Rajan Nishad | AI & Data Science Portfolio",
+  description: "Explore the work of Rajan Nishad, a Data Scientist and generative AI engineer building solutions with LLMs, RAG, and Computer Vision.",
+  alternates: {
+    canonical: "https://rajann.me",
+  },
+};
+
 export default function Home() {
   return (
     <main className="min-h-screen text-white">

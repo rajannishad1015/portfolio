@@ -33,10 +33,25 @@ export const metadata: Metadata = {
     "RAG Specialist",
     "PyTorch",
     "TensorFlow",
-    "AI Consultant"
+    "AI Consultant",
+    "Full Stack AI Engineer",
+    "Remote Machine Learning Engineer",
+    "Hugging Face",
+    "LangChain",
+    "OpenAI API",
+    "Computer Vision Specialist"
   ],
-  authors: [{ name: "Rajan Nishad" }],
+  authors: [{ name: "Rajan Nishad", url: "https://rajann.me" }],
   creator: "Rajan Nishad",
+  publisher: "Rajan Nishad",
+  category: "technology",
+  applicationName: "Rajan Nishad Portfolio",
+  alternates: {
+    canonical: "https://rajann.me",
+    languages: {
+      "en-US": "https://rajann.me",
+    },
+  },
   openGraph: {
     title: "Rajan Nishad | Data Scientist & Generative AI Engineer",
     description: "Explore the portfolio of Rajan Nishad, featuring advanced projects in Generative AI, NLP, and Computer Vision.",
