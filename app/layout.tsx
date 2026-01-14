@@ -9,8 +9,49 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Rajan Nishad | Data Scientist & ML Engineer",
-  description: "Portfolio of Rajan Nishad, specializing in NLP, Computer Vision, and Generative AI.",
+  metadataBase: new URL("https://rajann.me"),
+  title: {
+    default: "Rajan Nishad | Data Scientist & Generative AI Engineer",
+    template: "%s | Rajan Nishad",
+  },
+  description: "Portfolio of Rajan Nishad, a Data Scientist specializing in NLP, Computer Vision, and Generative AI. Explore projects in deep learning, LLMs, and AI solutions.",
+  keywords: ["Data Scientist", "Machine Learning Engineer", "Generative AI", "NLP", "Computer Vision", "Deep Learning", "Rajan Nishad", "Portfolio", "AI Developer"],
+  authors: [{ name: "Rajan Nishad" }],
+  creator: "Rajan Nishad",
+  openGraph: {
+    title: "Rajan Nishad | Data Scientist & Generative AI Engineer",
+    description: "Explore the portfolio of Rajan Nishad, featuring advanced projects in Generative AI, NLP, and Computer Vision.",
+    url: "https://rajann.me",
+    siteName: "Rajan Nishad Portfolio",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Rajan Nishad Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rajan Nishad | Data Scientist & Generative AI Engineer",
+    description: "Data Scientist specializing in Generative AI, NLP, and Computer Vision.",
+    creator: "@rajannishad",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
