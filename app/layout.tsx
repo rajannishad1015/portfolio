@@ -15,7 +15,26 @@ export const metadata: Metadata = {
     template: "%s | Rajan Nishad",
   },
   description: "Portfolio of Rajan Nishad, a Data Scientist specializing in NLP, Computer Vision, and Generative AI. Explore projects in deep learning, LLMs, and AI solutions.",
-  keywords: ["Data Scientist", "Machine Learning Engineer", "Generative AI", "NLP", "Computer Vision", "Deep Learning", "Rajan Nishad", "Portfolio", "AI Developer"],
+  keywords: [
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "Generative AI Engineer",
+    "NLP Specialist",
+    "Computer Vision",
+    "Deep Learning",
+    "Rajan Nishad",
+    "Portfolio",
+    "AI Developer",
+    "Next.js Developer",
+    "React Developer",
+    "Freelance Data Scientist",
+    "India",
+    "LLM Engineer",
+    "RAG Specialist",
+    "PyTorch",
+    "TensorFlow",
+    "AI Consultant"
+  ],
   authors: [{ name: "Rajan Nishad" }],
   creator: "Rajan Nishad",
   openGraph: {
@@ -52,10 +71,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
-  },
 };
 
 export default function RootLayout({
@@ -65,11 +80,45 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DD4F7WYPP2"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-DD4F7WYPP2');
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`}>
         <CustomCursor />
         <SmoothScroll />
         <Noise />
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Rajan Nishad",
+              url: "https://rajann.me",
+              image: "https://rajann.me/og-image.png",
+              sameAs: [
+                "https://github.com/Rajannishad1015",
+                "https://linkedin.com/in/rajanishad",
+              ],
+              jobTitle: "Data Scientist & Generative AI Engineer",
+              description:
+                "Data Scientist specializing in NLP, Computer Vision, and Generative AI.",
+            }),
+          }}
+        />
       </body>
     </html>
   );
