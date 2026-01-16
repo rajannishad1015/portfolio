@@ -23,19 +23,23 @@ export default function TechSphere() {
     let animationId: number;
 
     // Sphere State
+    // Sphere State
+    // Sphere State
     let rotation = { x: 0, y: 0 };
     let targetRotation = { x: 0, y: 0 };
-    const radius = 220; // Radius of the sphere
+    let radius = 280; // Initial radius
 
     // Generate Points on a Sphere (Fibonacci Sphere Algorithm for even distribution)
-    const points = SKILLS.map((skill, i) => {
+    let points = SKILLS.map((skill, i) => {
         const phi = Math.acos(-1 + (2 * i) / SKILLS.length);
         const theta = Math.sqrt(SKILLS.length * Math.PI) * phi;
         
         return {
-            x: radius * Math.cos(theta) * Math.sin(phi),
-            y: radius * Math.sin(theta) * Math.sin(phi),
-            z: radius * Math.cos(phi),
+            x: 0, // Will be calculated in resize/update
+            y: 0, 
+            z: 0, 
+            originalPhi: phi,
+            originalTheta: theta,
             text: skill
         };
     });
@@ -45,17 +49,32 @@ export default function TechSphere() {
         height = canvas.parentElement?.clientHeight || window.innerHeight;
         canvas.width = width;
         canvas.height = height;
+
+        // Responsive Radius
+        if (width < 600) {
+            radius = 110; // Significantly smaller for mobile to prevent edge touching
+        } else {
+            radius = 280; // Desktop default
+        }
+
+        // Recalculate original positions based on new radius
+        points = points.map(p => ({
+            ...p,
+            x: radius * Math.cos(p.originalTheta) * Math.sin(p.originalPhi),
+            y: radius * Math.sin(p.originalTheta) * Math.sin(p.originalPhi),
+            z: radius * Math.cos(p.originalPhi)
+        }));
     };
 
     const animate = () => {
         ctx.clearRect(0, 0, width, height);
 
         // Interpolate rotation for smoothness
-        rotation.x += (targetRotation.x - rotation.x) * 0.1;
-        rotation.y += (targetRotation.y - rotation.y) * 0.1;
+        rotation.x += (targetRotation.x - rotation.x) * 0.05;
+        rotation.y += (targetRotation.y - rotation.y) * 0.05;
 
         // Auto-rotation (idle spin)
-        targetRotation.y += 0.002;
+        targetRotation.y += 0.001;
 
         const cx = width / 2;
         const cy = height / 2;
@@ -71,7 +90,8 @@ export default function TechSphere() {
              let z2 = p.x * Math.sin(rotation.y) + z1 * Math.cos(rotation.y);
 
              // Perspective Projection
-             const scale = 400 / (400 + z2); 
+             const perspective = width < 600 ? 300 : 500; // Adjust perspective for mobile
+             const scale = perspective / (perspective + z2); 
              const x2d = cx + x2 * scale;
              const y2d = cy + y1 * scale;
 
@@ -92,13 +112,16 @@ export default function TechSphere() {
                 const dz = p1.z2 - p2.z2;
                 const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
-                if (dist < 120) { // Threshold for connection
+                // Responsive connection threshold
+                const threshold = width < 600 ? 100 : 150;
+
+                if (dist < threshold) { 
                     // Opacity based on Z-depth (Near items (neg z) are opaque)
                     const avgZ = (p1.z2 + p2.z2) / 2;
                     // Map Z from [-r, r] to [1, 0] roughly
                     // Near (-220) -> 1, Far (220) -> 0
                     const normZ = (avgZ + radius) / (2 * radius);
-                    const opacity = Math.max(0.05, (1 - normZ) * 0.5); // Max 0.5 opacity for lines
+                    const opacity = Math.max(0.02, (1 - normZ) * 0.3); // Reduced max opacity
                     
                     ctx.beginPath();
                     ctx.strokeStyle = `rgba(100, 180, 255, ${opacity})`; 
@@ -118,23 +141,26 @@ export default function TechSphere() {
              // Opacity/Scale based on Z-depth
              // Near (neg Z) -> High Opacity
             const normZ = (p.z2 + radius) / (2 * radius);
-            const opacity = Math.min(1, Math.max(0.1, (1 - normZ) + 0.1));
+            const opacity = Math.min(1, Math.max(0.15, (1 - normZ) + 0.1));
             
             ctx.save();
             ctx.globalAlpha = opacity;
             
-            // Text - BIGGER and BOLDER
-            ctx.font = `800 ${26 * p.scale}px "Outfit", sans-serif`; 
+            // Text - Refined Size (Responsive)
+            // Reduced mobile base size further based on user feedback
+            const baseSize = width < 600 ? 11 : 18; 
+            const fontSize = Math.max(8, baseSize * p.scale); 
+            ctx.font = `600 ${fontSize}px "Outfit", sans-serif`; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
             // Glow effect for front items (Negative Z is Front)
             if (p.z2 < 0) {
-                ctx.shadowColor = 'rgba(59, 130, 246, 0.8)';
-                ctx.shadowBlur = 30 * p.scale; 
+                ctx.shadowColor = 'rgba(59, 130, 246, 0.6)';
+                ctx.shadowBlur = (width < 600 ? 10 : 15) * p.scale; 
                 ctx.fillStyle = '#ffffff';
             } else {
-                ctx.fillStyle = '#9ca3af'; // Lighter gray for back
+                ctx.fillStyle = '#94a3b8'; // Slate-400
                 ctx.shadowBlur = 0;
             }
 

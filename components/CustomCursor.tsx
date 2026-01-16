@@ -37,6 +37,25 @@ export default function CustomCursor() {
     };
   }, [cursorX, cursorY]);
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Only show custom cursor on non-touch devices/larger screens
+    const checkDevice = () => {
+      if (window.matchMedia("(pointer: fine)").matches) {
+          setIsVisible(true);
+      } else {
+          setIsVisible(false);
+      }
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  if (!isVisible) return null;
+
   return (
     <>
       <motion.div
