@@ -52,7 +52,7 @@ export default function TechSphere() {
 
         // Responsive Radius
         if (width < 600) {
-            radius = 110; // Significantly smaller for mobile to prevent edge touching
+            radius = 120; // Reduced slightly based on user feedback (was 135)
         } else {
             radius = 280; // Desktop default
         }
@@ -90,7 +90,8 @@ export default function TechSphere() {
              let z2 = p.x * Math.sin(rotation.y) + z1 * Math.cos(rotation.y);
 
              // Perspective Projection
-             const perspective = width < 600 ? 500 : 500; // Increased perspective for mobile to flatten view
+             // Adjusted perspective to 400 for better 3D "perfect circle" look on mobile
+             const perspective = width < 600 ? 400 : 500; 
              const scale = perspective / (perspective + z2); 
              const x2d = cx + x2 * scale;
              const y2d = cy + y1 * scale;
