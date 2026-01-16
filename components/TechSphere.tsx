@@ -90,7 +90,7 @@ export default function TechSphere() {
              let z2 = p.x * Math.sin(rotation.y) + z1 * Math.cos(rotation.y);
 
              // Perspective Projection
-             const perspective = width < 600 ? 300 : 500; // Adjust perspective for mobile
+             const perspective = width < 600 ? 500 : 500; // Increased perspective for mobile to flatten view
              const scale = perspective / (perspective + z2); 
              const x2d = cx + x2 * scale;
              const y2d = cy + y1 * scale;
@@ -113,7 +113,7 @@ export default function TechSphere() {
                 const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
                 // Responsive connection threshold
-                const threshold = width < 600 ? 100 : 150;
+                const threshold = width < 600 ? 90 : 150;
 
                 if (dist < threshold) { 
                     // Opacity based on Z-depth (Near items (neg z) are opaque)
@@ -148,8 +148,8 @@ export default function TechSphere() {
             
             // Text - Refined Size (Responsive)
             // Reduced mobile base size further based on user feedback
-            const baseSize = width < 600 ? 11 : 18; 
-            const fontSize = Math.max(8, baseSize * p.scale); 
+            const baseSize = width < 600 ? 9 : 18; 
+            const fontSize = Math.max(7, baseSize * p.scale); 
             ctx.font = `600 ${fontSize}px "Outfit", sans-serif`; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
