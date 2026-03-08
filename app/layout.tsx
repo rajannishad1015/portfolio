@@ -39,7 +39,9 @@ export const metadata: Metadata = {
     "Hugging Face",
     "LangChain",
     "OpenAI API",
-    "Computer Vision Specialist"
+    "Computer Vision Specialist",
+    "राजन निषाद",
+    "डेटा साइंटिस्ट"
   ],
   authors: [{ name: "Rajan Nishad", url: "https://rajann.me" }],
   creator: "Rajan Nishad",
@@ -58,13 +60,13 @@ export const metadata: Metadata = {
     url: "https://rajann.me",
     siteName: "Rajan Nishad Portfolio",
     locale: "en_US",
-    type: "website",
+    type: "profile",
     images: [
       {
-        url: "/og-image.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Rajan Nishad Portfolio",
+        alt: "Rajan Nishad - Data Scientist & AI Engineer Portfolio",
       },
     ],
   },
@@ -73,7 +75,7 @@ export const metadata: Metadata = {
     title: "Rajan Nishad | Data Scientist & Generative AI Engineer",
     description: "Data Scientist specializing in Generative AI, NLP, and Computer Vision.",
     creator: "@rajannishad",
-    images: ["/og-image.png"],
+    images: ["/twitter-image"],
   },
   robots: {
     index: true,
@@ -88,6 +90,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "VV-Xf4yBGy1QUmUWr0-1TDriongMJ_GqORf9UAZ-k-s",
+  },
+  other: {
+    "msapplication-TileColor": "#3b82f6",
   },
 };
 
@@ -118,6 +123,8 @@ export default function RootLayout({
         <SmoothScroll />
         <Noise />
         {children}
+
+        {/* Enhanced Structured Data - Person Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -126,14 +133,77 @@ export default function RootLayout({
               "@type": "Person",
               name: "Rajan Nishad",
               url: "https://rajann.me",
-              image: "https://rajann.me/og-image.png",
+              image: "https://rajann.me/opengraph-image",
               sameAs: [
                 "https://github.com/Rajannishad1015",
                 "https://linkedin.com/in/rajanishad",
               ],
               jobTitle: "Data Scientist & Generative AI Engineer",
-              description:
-                "Data Scientist specializing in NLP, Computer Vision, and Generative AI.",
+              description: "Data Scientist specializing in NLP, Computer Vision, and Generative AI.",
+              knowsAbout: [
+                "Machine Learning",
+                "Natural Language Processing",
+                "Computer Vision",
+                "Generative AI",
+                "Deep Learning",
+                "Python",
+                "PyTorch",
+                "TensorFlow",
+                "LLM",
+                "RAG"
+              ],
+              alumniOf: {
+                "@type": "EducationalOrganization",
+                name: "Kes Shroff College",
+              },
+              worksFor: {
+                "@type": "Organization",
+                name: "Rays Biotech",
+              },
+            }),
+          }}
+        />
+
+        {/* WebSite Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Rajan Nishad Portfolio",
+              url: "https://rajann.me",
+              description: "Portfolio of Rajan Nishad, Data Scientist and Generative AI Engineer",
+              author: {
+                "@type": "Person",
+                name: "Rajan Nishad",
+              },
+              inLanguage: "en-US",
+            }),
+          }}
+        />
+
+        {/* Professional Service Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              name: "Rajan Nishad - Data Science & AI Services",
+              description: "Professional services in Data Science, Machine Learning, and Generative AI",
+              provider: {
+                "@type": "Person",
+                name: "Rajan Nishad",
+              },
+              areaServed: "Worldwide",
+              serviceType: [
+                "Data Science",
+                "Machine Learning",
+                "Generative AI",
+                "NLP Solutions",
+                "Computer Vision",
+              ],
             }),
           }}
         />
