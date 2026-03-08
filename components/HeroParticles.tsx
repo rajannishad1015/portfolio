@@ -101,27 +101,76 @@ export default function HeroParticles() {
     const animate = () => {
       if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
+      // Update and draw all particles
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
+      }
 
-        // Connect particles
-        for (let j = i; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+      // Optimized connection rendering with spatial grid
+      // Create a spatial grid for efficient proximity queries
+      const connectionDistance = 100;
+      const gridSize = connectionDistance; // Each cell is connectionDistance x connectionDistance
+      const cols = Math.ceil(canvas.width / gridSize);
+      const rows = Math.ceil(canvas.height / gridSize);
+      const grid: Particle[][] = Array.from({ length: rows * cols }, () => []);
 
-          if (distance < 100) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(100, 160, 255, ${0.2 - distance/500})`; // Fade out
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
+      // Assign particles to grid cells
+      for (let i = 0; i < particles.length; i++) {
+        const col = Math.floor(particles[i].x / gridSize);
+        const row = Math.floor(particles[i].y / gridSize);
+        const cellIndex = row * cols + col;
+        if (cellIndex >= 0 && cellIndex < grid.length) {
+          grid[cellIndex].push(particles[i]);
+        }
+      }
+
+      // Only check particles in same or adjacent cells
+      const checked = new Set<string>();
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        const col = Math.floor(p1.x / gridSize);
+        const row = Math.floor(p1.y / gridSize);
+
+        // Check current cell and 8 adjacent cells
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            const neighborRow = row + dr;
+            const neighborCol = col + dc;
+            const cellIndex = neighborRow * cols + neighborCol;
+
+            if (cellIndex >= 0 && cellIndex < grid.length && grid[cellIndex]) {
+              for (let j = 0; j < grid[cellIndex].length; j++) {
+                const p2 = grid[cellIndex][j];
+
+                // Avoid checking same particle and duplicate pairs
+                const pairKey = p1 < p2 ? `${particles.indexOf(p1)}-${particles.indexOf(p2)}` : `${particles.indexOf(p2)}-${particles.indexOf(p1)}`;
+                if (p1 !== p2 && !checked.has(pairKey)) {
+                  checked.add(pairKey);
+
+                  // Use squared distance to avoid sqrt calculation
+                  const dx = p1.x - p2.x;
+                  const dy = p1.y - p2.y;
+                  const distSquared = dx * dx + dy * dy;
+                  const maxDistSquared = connectionDistance * connectionDistance;
+
+                  if (distSquared < maxDistSquared) {
+                    const distance = Math.sqrt(distSquared);
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(100, 160, 255, ${0.2 - distance/500})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                  }
+                }
+              }
+            }
           }
         }
       }
+
       animationFrameId = requestAnimationFrame(animate);
     };
 
