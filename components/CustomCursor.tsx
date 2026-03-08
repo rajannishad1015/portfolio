@@ -19,21 +19,29 @@ export default function CustomCursor() {
       cursorY.set(e.clientY - 16);
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
+    // Throttle hover check to reduce overhead
+    let lastHoverCheck = 0;
+    const hoverCheckInterval = 100; // Check every 100ms instead of on every mouseover
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const now = Date.now();
+      if (now - lastHoverCheck > hoverCheckInterval) {
+        lastHoverCheck = now;
         const target = e.target as HTMLElement;
         if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') || target.closest('button')) {
-            setIsHovered(true);
+          setIsHovered(true);
         } else {
-            setIsHovered(false);
+          setIsHovered(false);
         }
+      }
     };
 
     window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleMouseOver); // Delegate event for performance
+    window.addEventListener('mousemove', handleMouseMove); // Combined with moveCursor
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [cursorX, cursorY]);
 

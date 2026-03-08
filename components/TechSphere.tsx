@@ -66,6 +66,10 @@ export default function TechSphere() {
         }));
     };
 
+    // Cache trigonometric calculations
+    let cosRotX = 1, sinRotX = 0, cosRotY = 1, sinRotY = 0;
+    let lastRotX = 0, lastRotY = 0;
+
     const animate = () => {
         ctx.clearRect(0, 0, width, height);
 
@@ -76,56 +80,72 @@ export default function TechSphere() {
         // Auto-rotation (idle spin)
         targetRotation.y += 0.001;
 
+        // Only recalculate trig functions if rotation changed significantly
+        if (Math.abs(rotation.x - lastRotX) > 0.001 || Math.abs(rotation.y - lastRotY) > 0.001) {
+            cosRotX = Math.cos(rotation.x);
+            sinRotX = Math.sin(rotation.x);
+            cosRotY = Math.cos(rotation.y);
+            sinRotY = Math.sin(rotation.y);
+            lastRotX = rotation.x;
+            lastRotY = rotation.y;
+        }
+
         const cx = width / 2;
         const cy = height / 2;
+        const perspective = width < 600 ? 400 : 500;
 
-        // 1. PROJECT 3D Points to 2D
+        // 1. PROJECT 3D Points to 2D (with cached trig values)
         const projectedPoints = points.map(p => {
              // Rotate around X
-             let y1 = p.y * Math.cos(rotation.x) - p.z * Math.sin(rotation.x);
-             let z1 = p.y * Math.sin(rotation.x) + p.z * Math.cos(rotation.x);
-             
+             let y1 = p.y * cosRotX - p.z * sinRotX;
+             let z1 = p.y * sinRotX + p.z * cosRotX;
+
              // Rotate around Y
-             let x2 = p.x * Math.cos(rotation.y) - z1 * Math.sin(rotation.y);
-             let z2 = p.x * Math.sin(rotation.y) + z1 * Math.cos(rotation.y);
+             let x2 = p.x * cosRotY - z1 * sinRotY;
+             let z2 = p.x * sinRotY + z1 * cosRotY;
 
              // Perspective Projection
-             // Adjusted perspective to 400 for better 3D "perfect circle" look on mobile
-             const perspective = width < 600 ? 400 : 500; 
-             const scale = perspective / (perspective + z2); 
+             const scale = perspective / (perspective + z2);
              const x2d = cx + x2 * scale;
              const y2d = cy + y1 * scale;
 
              return { ...p, x2, y1, z2, x2d, y2d, scale };
         });
 
-        // 2. DRAW CONNECTIONS (Neural Lines)
+        // 2. DRAW CONNECTIONS (Neural Lines) - Optimized with squared distances
         // We do this before nodes so lines appear behind text
         ctx.lineWidth = 1;
+        const threshold = width < 600 ? 90 : 150;
+        const thresholdSquared = threshold * threshold;
+
         for (let i = 0; i < projectedPoints.length; i++) {
+            const p1 = projectedPoints[i];
+
+            // Early exit if point is too far back (optimization)
+            if (p1.z2 > radius * 0.8) continue;
+
             for (let j = i + 1; j < projectedPoints.length; j++) {
-                const p1 = projectedPoints[i];
                 const p2 = projectedPoints[j];
 
-                // Calculate distance in 3D space
+                // Early exit if second point is too far back
+                if (p2.z2 > radius * 0.8) continue;
+
+                // Calculate distance in 3D space using squared distance first
                 const dx = p1.x2 - p2.x2;
                 const dy = p1.y1 - p2.y1;
                 const dz = p1.z2 - p2.z2;
-                const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+                const distSquared = dx*dx + dy*dy + dz*dz;
 
-                // Responsive connection threshold
-                const threshold = width < 600 ? 90 : 150;
+                if (distSquared < thresholdSquared) {
+                    const dist = Math.sqrt(distSquared);
 
-                if (dist < threshold) { 
                     // Opacity based on Z-depth (Near items (neg z) are opaque)
                     const avgZ = (p1.z2 + p2.z2) / 2;
-                    // Map Z from [-r, r] to [1, 0] roughly
-                    // Near (-220) -> 1, Far (220) -> 0
                     const normZ = (avgZ + radius) / (2 * radius);
-                    const opacity = Math.max(0.02, (1 - normZ) * 0.3); // Reduced max opacity
-                    
+                    const opacity = Math.max(0.02, (1 - normZ) * 0.3);
+
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(100, 180, 255, ${opacity})`; 
+                    ctx.strokeStyle = `rgba(100, 180, 255, ${opacity})`;
                     ctx.moveTo(p1.x2d, p1.y2d);
                     ctx.lineTo(p2.x2d, p2.y2d);
                     ctx.stroke();
@@ -134,31 +154,27 @@ export default function TechSphere() {
         }
 
         // 3. DRAW NODES (Sorted by Z - Far to Near)
-        // Far z is Positive. Near z is Negative.
-        // We want to draw Far (Positive) first.
         projectedPoints.sort((a, b) => b.z2 - a.z2);
 
         projectedPoints.forEach(p => {
              // Opacity/Scale based on Z-depth
-             // Near (neg Z) -> High Opacity
             const normZ = (p.z2 + radius) / (2 * radius);
             const opacity = Math.min(1, Math.max(0.15, (1 - normZ) + 0.1));
-            
+
             ctx.save();
             ctx.globalAlpha = opacity;
-            
+
             // Text - Refined Size (Responsive)
-            // Reduced mobile base size further based on user feedback
-            const baseSize = width < 600 ? 9 : 18; 
-            const fontSize = Math.max(7, baseSize * p.scale); 
-            ctx.font = `600 ${fontSize}px "Outfit", sans-serif`; 
+            const baseSize = width < 600 ? 9 : 18;
+            const fontSize = Math.max(7, baseSize * p.scale);
+            ctx.font = `600 ${fontSize}px "Outfit", sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            
+
             // Glow effect for front items (Negative Z is Front)
             if (p.z2 < 0) {
                 ctx.shadowColor = 'rgba(59, 130, 246, 0.6)';
-                ctx.shadowBlur = (width < 600 ? 10 : 15) * p.scale; 
+                ctx.shadowBlur = (width < 600 ? 10 : 15) * p.scale;
                 ctx.fillStyle = '#ffffff';
             } else {
                 ctx.fillStyle = '#94a3b8'; // Slate-400

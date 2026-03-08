@@ -27,12 +27,10 @@ export default function ScrollyCanvas() {
     restDelta: 0.001
   });
 
-  // 1. Load images on mount
+  // 1. Load images on mount - Optimized with parallel loading
   useEffect(() => {
     // Initialize the array
     imagesRef.current = new Array(FRAME_COUNT);
-
-    let loadedCount = 0;
 
     const loadImages = async () => {
       // Load the first image immediately for instant feedback
@@ -44,28 +42,43 @@ export default function ScrollyCanvas() {
          // ignore decode error
       }
       imagesRef.current[0] = firstImg;
-      
+
       // Mark as at least partially ready so we can render frame 0
       setIsLoaded(true);
 
-      // Load the rest in background
-      for (let i = 1; i < FRAME_COUNT; i++) {
-        const img = new Image();
-        const frameNumber = i.toString().padStart(2, "0");
-        img.src = `/sequence/frame_${frameNumber}.png`;
-        
-        img.onload = async () => {
-          try {
-            await img.decode();
-          } catch(e) { /* ignore */ }
-          
-          imagesRef.current[i] = img;
-          loadedCount++;
-          if (loadedCount === FRAME_COUNT - 1) {
-             // All loaded
-          }
-        };
+      // Load remaining images in parallel with batching to avoid overwhelming browser
+      const batchSize = 10;
+      const batches = [];
+
+      for (let i = 1; i < FRAME_COUNT; i += batchSize) {
+        const batch = [];
+        for (let j = i; j < Math.min(i + batchSize, FRAME_COUNT); j++) {
+          batch.push(
+            new Promise<void>((resolve) => {
+              const img = new Image();
+              const frameNumber = j.toString().padStart(2, "0");
+              img.src = `/sequence/frame_${frameNumber}.png`;
+
+              img.onload = async () => {
+                try {
+                  await img.decode();
+                } catch(e) { /* ignore */ }
+                imagesRef.current[j] = img;
+                resolve();
+              };
+
+              img.onerror = () => {
+                // If image fails to load, just skip it
+                resolve();
+              };
+            })
+          );
+        }
+        batches.push(Promise.all(batch));
       }
+
+      // Wait for all batches to complete
+      await Promise.all(batches);
     };
 
     loadImages();

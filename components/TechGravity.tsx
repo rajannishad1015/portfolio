@@ -50,12 +50,14 @@ export default function TechGravity() {
       }
 
       update() {
-        // Mouse Interaction (Push/Pull)
+        // Mouse Interaction (Push/Pull) - optimized with squared distance
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distSquared = dx * dx + dy * dy;
+        const maxDistSquared = 200 * 200;
 
-        if (distance < 200) {
+        if (distSquared < maxDistSquared) {
+            const distance = Math.sqrt(distSquared);
             // Gentle repulsion
             const force = (200 - distance) / 200;
             this.vx -= (dx / distance) * force * 0.5;
