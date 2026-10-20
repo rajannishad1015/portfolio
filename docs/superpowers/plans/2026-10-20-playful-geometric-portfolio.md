@@ -6,7 +6,7 @@
 
 **Architecture:** A static Vite + React 19 + TypeScript SPA. All content lives in one typed data module (`src/data/content.ts`); every section component reads from it and knows nothing about the resume. Styling is Tailwind CSS v4 with the design system mapped 1:1 into `@theme` tokens, plus a small set of hand-written CSS keyframes for the bouncy motion. Scroll-reveal and active-nav behaviour are two IntersectionObserver hooks. No animation library, no backend, no runtime dependency beyond `react`, `react-dom` and `lucide-react`.
 
-**Tech Stack:** Vite 8.3, React 19.3, TypeScript 5.9, Tailwind CSS 4.3, Vitest 5, @testing-library/react 16, lucide-react 0.562, ESLint 10 flat config, @fontsource fonts.
+**Tech Stack:** Vite 8.3, React 19.3, TypeScript 5.9, Tailwind CSS 4.3, Vitest 5, @testing-library/react 16, lucide-react 0.562, tailwind-merge 3.7, ESLint 10 flat config, @fontsource fonts.
 
 **Spec:** `docs/superpowers/specs/2026-10-20-playful-geometric-portfolio-design.md`
 
@@ -29,6 +29,7 @@
 | `src/data/content.ts` | Every string, list and link on the site. Single source of truth. |
 | `src/data/content.test.ts` | Content integrity tests. |
 | `src/lib/theme.ts` | The shared `AccentColor` union, used by both the content model and the UI primitives. |
+| `src/lib/cn.ts` | `cn()` — a `tailwind-merge` wrapper so a consumer's `className` override always wins over a primitive's own classes. |
 | `src/components/icons.ts` | `IconName` union + `ICONS` map from lucide-react. |
 | `src/components/ui/CandyButton.tsx` | `CandyButton` (button) and `CandyLink` (anchor) primitives. |
 | `src/components/ui/StickerCard.tsx` | Sticker card primitive. |
@@ -1672,6 +1673,28 @@ describe('DotGrid', () => {
 Run: `npm test`
 Expected: FAIL — `Failed to resolve import "./CandyButton"`.
 
+- [ ] **Step 2b: Install `tailwind-merge` and create `src/lib/cn.ts`**
+
+Without conflict-free class merging, a consumer's `className` silently loses to the primitive's own classes: Tailwind emits `.hidden` before `.inline-flex`, so `<CandyLink className="hidden sm:inline-flex">` would stay visible on mobile.
+
+```bash
+npm install tailwind-merge
+```
+
+Create `src/lib/cn.ts`:
+
+```ts
+import { twMerge } from 'tailwind-merge';
+
+export function cn(
+  ...classes: Array<string | false | null | undefined>
+): string {
+  return twMerge(classes.filter(Boolean).join(' '));
+}
+```
+
+`tailwind-merge` is a **runtime** dependency (it is imported by the shipped code), so it belongs in `dependencies`, not `devDependencies`.
+
 - [ ] **Step 3: Write `src/components/ui/CandyButton.tsx`**
 
 ```tsx
@@ -1680,6 +1703,7 @@ import type {
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react';
+import { cn } from '../../lib/cn';
 
 export type CandyVariant = 'primary' | 'secondary';
 
@@ -1718,9 +1742,11 @@ export function CandyLink({
   className = '',
   children,
   ...rest
-}: SharedProps & AnchorHTMLAttributes<HTMLAnchorElement>) {
+}: SharedProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+    href: string;
+  }) {
   return (
-    <a className={`${base} ${variants[variant]} ${className}`} {...rest}>
+    <a className={cn(base, variants[variant], className)} {...rest}>
       <Inner icon={icon}>{children}</Inner>
     </a>
   );
@@ -1730,11 +1756,16 @@ export function CandyButton({
   variant = 'primary',
   icon,
   className = '',
+  type = 'button',
   children,
   ...rest
 }: SharedProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} {...rest}>
+    <button
+      type={type}
+      className={cn(base, variants[variant], className)}
+      {...rest}
+    >
       <Inner icon={icon}>{children}</Inner>
     </button>
   );
@@ -1746,6 +1777,7 @@ export function CandyButton({
 ```tsx
 import type { HTMLAttributes, ReactNode } from 'react';
 import type { AccentColor } from '../../lib/theme';
+import { cn } from '../../lib/cn';
 
 export type CardShadow = 'default' | 'pink' | 'mint' | 'sun';
 
@@ -1771,7 +1803,7 @@ type StickerCardProps = {
   shadow?: CardShadow;
   className?: string;
   children?: ReactNode;
-} & HTMLAttributes<HTMLElement>;
+} & Omit<HTMLAttributes<HTMLElement>, 'title'>;
 
 export function StickerCard({
   title,
@@ -1784,12 +1816,19 @@ export function StickerCard({
 }: StickerCardProps) {
   return (
     <article
-      className={`relative rounded-xl border-2 border-ink bg-card p-6 pt-9 transition-all duration-300 ease-bounce hover:-rotate-1 hover:scale-[1.02] ${shadowClasses[shadow]} ${className}`}
+      className={cn(
+        'relative rounded-xl border-2 border-ink bg-card p-6 pt-9 transition-all duration-300 ease-bounce hover:-rotate-1 hover:scale-[1.02]',
+        shadowClasses[shadow],
+        className,
+      )}
       {...rest}
     >
       {icon ? (
         <span
-          className={`absolute -top-5 left-5 grid size-11 place-items-center rounded-full border-2 border-ink ${accentClasses[accent]}`}
+          className={cn(
+            'absolute -top-5 left-5 grid size-11 place-items-center rounded-full border-2 border-ink',
+            accentClasses[accent],
+          )}
           aria-hidden="true"
         >
           {icon}
@@ -1883,6 +1922,8 @@ export function SectionTitle({ eyebrow, title, lead }: SectionTitleProps) {
 - [ ] **Step 8: Write `src/components/ui/Marquee.tsx`**
 
 ```tsx
+import { cn } from '../../lib/cn';
+
 type MarqueeProps = {
   items: readonly string[];
   reverse?: boolean;
@@ -1893,15 +1934,19 @@ type MarqueeProps = {
 export function Marquee({
   items,
   reverse = false,
-  duration = 28,
+  duration,
   className = '',
 }: MarqueeProps) {
   const track = [...items, ...items];
+  const speed = duration ?? (reverse ? 34 : 28);
   return (
-    <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
+    <div className={cn('relative overflow-hidden', className)} aria-hidden="true">
       <div
-        className={`flex w-max flex-nowrap items-center gap-3 pr-3 ${reverse ? 'animate-marquee-rev' : 'animate-marquee'}`}
-        style={{ animationDuration: `${duration}s` }}
+        className={cn(
+          'flex w-max flex-nowrap items-center gap-3 pr-3',
+          reverse ? 'animate-marquee-rev' : 'animate-marquee',
+        )}
+        style={{ animationDuration: `${speed}s` }}
       >
         {track.map((item, index) => (
           <span
