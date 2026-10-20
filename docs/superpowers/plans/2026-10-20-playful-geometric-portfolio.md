@@ -747,17 +747,32 @@ describe('design token layer', () => {
 });
 ```
 
-- [ ] **Step 1b: Verify the utility classes actually resolve**
+- [ ] **Step 1b: Verify the utilities actually resolve**
 
-The token test above only proves the CSS *contains* the token text. It does not prove the Tailwind utility classes the components use (`bg-cream`, `text-ink`, `shadow-pop`, `font-display`, `ease-bounce`, `animate-wiggle`) resolve against those tokens. A typo on either side renders a completely unstyled site that no other test catches.
+The token test above only proves the CSS *contains* the token text. It does not prove the Tailwind utility classes resolve against those tokens. A typo on either side renders a completely unstyled site that no other test catches.
+
+Tailwind v4 generates utilities **on demand** from the scanned source tree, so a utility only appears in the compiled CSS once some file under `src/` uses it. At this point in the build only `src/App.tsx` uses Tailwind classes (`bg-cream`, `text-ink`, `min-h-screen`).
 
 This is a build-and-grep check, not a unit test, because the utilities only exist in the compiled stylesheet. After the build in Step 4, run:
 
 ```powershell
-Select-String -Path "dist\assets\*.css" -Pattern "\.bg-cream","\.text-ink","\.shadow-pop","\.font-display","\.ease-bounce","\.animate-wiggle" | Select-Object -ExpandProperty Pattern -Unique
+$css = Get-Content (Get-ChildItem "dist\assets\*.css" | Select-Object -First 1).FullName -Raw
+foreach ($u in @(".bg-cream", ".text-ink", ".min-h-screen")) {
+  "{0,-16} {1}" -f $u, $(if ($css.Contains($u)) { "FOUND" } else { "MISSING" })
+}
 ```
 
-Expected: all six utility class names are found in the compiled CSS. If any is missing, the corresponding token name in `src/index.css` is wrong — fix it before moving on.
+Expected: `FOUND` for all three. The remaining design-system utilities (`shadow-pop`, `font-display`, `ease-bounce`) are **expected to be absent** at this stage — they are generated once the components in Tasks 4–14 use them. The `@source inline(...)` safelist keeps the eight animation keyframes in the bundle regardless.
+
+Confirm the keyframes were emitted and the hard-shadow value survived the build:
+
+```powershell
+$css.Contains("@keyframes role-swap")   # True
+$css.Contains("@keyframes wiggle")      # True
+$css.Contains("4px 4px 0 0 #1e293b")    # True
+```
+
+Expected: `True` for all three.
 
 - [ ] **Step 2: Run the test and confirm it fails**
 
@@ -767,7 +782,19 @@ Expected: FAIL — token strings not found in `src/index.css`.
 - [ ] **Step 3: Write the full `src/index.css`**
 
 ```css
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Scan only the source tree. Without this, Tailwind v4 auto-detects content
+   across the whole project — including the plan and spec markdown — and ships
+   ~29 KB of rules for class names that only ever appear in documentation.
+   `source(none)` switches off that automatic detection, and `@source` paths
+   are resolved relative to this stylesheet, so "./" is the src/ directory. */
+@source "./**/*.{ts,tsx}";
+
+/* Tailwind tree-shakes `@keyframes` declared inside `@theme` unless the
+   matching `animate-*` utility is generated, so safelist the animations to
+   keep their keyframes in the compiled stylesheet. */
+@source inline("animate-wiggle animate-float-y animate-float-x animate-marquee animate-marquee-rev animate-blob animate-confetti animate-role-swap");
 
 @theme {
   /* ---------- Colour ---------- */
@@ -810,7 +837,7 @@ Expected: FAIL — token strings not found in `src/index.css`.
   --animate-marquee-rev: marquee-rev 34s linear infinite;
   --animate-blob: blob 12s ease-in-out infinite;
   --animate-confetti: confetti 12s ease-in-out infinite;
-  --animate-role-swap: role-swap 9.6s ease-in-out both;
+  --animate-role-swap: role-swap 9.6s ease-in-out infinite both;
 
   @keyframes wiggle {
     0%,
@@ -900,17 +927,17 @@ Expected: FAIL — token strings not found in `src/index.css`.
       transform: translateY(0.75rem);
       filter: blur(6px);
     }
-    4% {
+    2% {
       opacity: 1;
       transform: translateY(0);
       filter: blur(0);
     }
-    21% {
+    22% {
       opacity: 1;
       transform: translateY(0);
       filter: blur(0);
     }
-    25%,
+    27%,
     100% {
       opacity: 0;
       transform: translateY(-0.75rem);
@@ -934,7 +961,9 @@ Expected: FAIL — token strings not found in `src/index.css`.
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -992,6 +1021,9 @@ Expected: FAIL — token strings not found in `src/index.css`.
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    rotate: none !important;
+    scale: none !important;
+    translate: none !important;
   }
 
   [data-role-word] {
