@@ -91,7 +91,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run"
@@ -192,6 +193,14 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
+      globals: globals.node,
+    },
+  },
+  {
+    files: ['vite.config.ts'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
       globals: globals.node,
     },
   },
@@ -395,6 +404,256 @@ git commit -m "chore: scaffold Vite + React + Tailwind + Vitest project"
 
 ---
 
+### Task 1a: Harden the IntersectionObserver stub and close the Task 1 review gaps
+
+**Files:**
+- Modify: `src/test/mockIntersectionObserver.ts`
+- Create: `src/test/mockIntersectionObserver.test.ts`
+- Modify: `package.json` (add a `typecheck` script)
+- Modify: `eslint.config.js` (Node globals for `vite.config.ts`)
+- Create: `public/favicon.svg`
+
+**Why this task exists:** a code-quality review of Task 1 found three real correctness gaps in the shared `IntersectionObserver` stub — the artefact every later task depends on — plus a missing test for it. Fixing it now is far cheaper than after 15 tasks depend on it.
+
+- [ ] **Step 1: Write the failing stub tests `src/test/mockIntersectionObserver.test.ts`**
+
+```ts
+import { describe, expect, it, vi } from 'vitest';
+import { MockIntersectionObserver } from './mockIntersectionObserver';
+
+describe('MockIntersectionObserver', () => {
+  it('reads root, rootMargin and thresholds from its options', () => {
+    const root = document.createElement('div');
+    const observer = new MockIntersectionObserver(() => {}, {
+      root,
+      rootMargin: '10px',
+      threshold: 0.5,
+    });
+    expect(observer.root).toBe(root);
+    expect(observer.rootMargin).toBe('10px');
+    expect(observer.thresholds).toEqual([0.5]);
+  });
+
+  it('accepts an array of thresholds and defaults to [0]', () => {
+    expect(
+      new MockIntersectionObserver(() => {}, { threshold: [0, 0.5] }).thresholds,
+    ).toEqual([0, 0.5]);
+    expect(new MockIntersectionObserver(() => {}).thresholds).toEqual([0]);
+  });
+
+  it('delivers entries with every field populated', () => {
+    const callback = vi.fn();
+    const observer = new MockIntersectionObserver(callback);
+    const target = document.createElement('div');
+    observer.observe(target);
+    observer.emit([{ isIntersecting: true, target }]);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    const entry = callback.mock.calls[0][0][0] as IntersectionObserverEntry;
+    expect(entry.isIntersecting).toBe(true);
+    expect(entry.intersectionRatio).toBe(1);
+    expect(entry.target).toBe(target);
+    expect(entry.time).toBeTypeOf('number');
+    expect(entry.boundingClientRect).toBeInstanceOf(DOMRect);
+  });
+
+  it('only delivers entries for observed targets', () => {
+    const callback = vi.fn();
+    const observer = new MockIntersectionObserver(callback);
+    observer.emit([{ isIntersecting: true, target: document.createElement('div') }]);
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('stops delivering entries after unobserve and disconnect', () => {
+    const callback = vi.fn();
+    const observer = new MockIntersectionObserver(callback);
+    const target = document.createElement('div');
+
+    observer.observe(target);
+    observer.unobserve(target);
+    observer.emit([{ isIntersecting: true, target }]);
+    expect(callback).not.toHaveBeenCalled();
+
+    observer.observe(target);
+    observer.disconnect();
+    observer.emit([{ isIntersecting: true, target }]);
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('tracks instances and throws from last when there are none', () => {
+    MockIntersectionObserver.reset();
+    expect(() => MockIntersectionObserver.last).toThrow();
+    new MockIntersectionObserver(() => {});
+    expect(MockIntersectionObserver.instances).toHaveLength(1);
+    expect(MockIntersectionObserver.last).toBeInstanceOf(MockIntersectionObserver);
+  });
+});
+```
+
+- [ ] **Step 2: Run the test and confirm it fails**
+
+Run: `npm test -- src/test/mockIntersectionObserver.test.ts`
+Expected: FAIL — `root` is always `null`, `intersectionRatio` is `undefined`, and `emit` delivers entries for unobserved targets and after `disconnect()`.
+
+- [ ] **Step 3: Rewrite `src/test/mockIntersectionObserver.ts`**
+
+```ts
+type ObserverCallback = (
+  entries: IntersectionObserverEntry[],
+  observer: IntersectionObserver,
+) => void;
+
+export class MockIntersectionObserver implements IntersectionObserver {
+  static instances: MockIntersectionObserver[] = [];
+
+  readonly root: Element | Document | null;
+  readonly rootMargin: string;
+  readonly thresholds: ReadonlyArray<number>;
+
+  private readonly callback: ObserverCallback;
+  private readonly observed = new Set<Element>();
+  private disconnected = false;
+
+  constructor(callback: ObserverCallback, options?: IntersectionObserverInit) {
+    this.callback = callback;
+    this.root = options?.root ?? null;
+    this.rootMargin = options?.rootMargin ?? '0px 0px 0px 0px';
+    this.thresholds = Array.isArray(options?.threshold)
+      ? options.threshold
+      : [options?.threshold ?? 0];
+    MockIntersectionObserver.instances.push(this);
+  }
+
+  observe(target: Element): void {
+    if (!this.disconnected) {
+      this.observed.add(target);
+    }
+  }
+
+  unobserve(target: Element): void {
+    this.observed.delete(target);
+  }
+
+  disconnect(): void {
+    this.observed.clear();
+    this.disconnected = true;
+  }
+
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+
+  emit(entries: Partial<IntersectionObserverEntry>[]): void {
+    if (this.disconnected) {
+      return;
+    }
+
+    const time = performance.now();
+    const relevant = entries.filter(
+      (entry) => entry.target && this.observed.has(entry.target),
+    );
+    if (relevant.length === 0) {
+      return;
+    }
+
+    const full = relevant.map((entry) => ({
+      time,
+      rootBounds: null,
+      boundingClientRect: entry.boundingClientRect ?? new DOMRect(),
+      intersectionRect: entry.intersectionRect ?? new DOMRect(),
+      isIntersecting: entry.isIntersecting ?? false,
+      intersectionRatio:
+        entry.intersectionRatio ?? (entry.isIntersecting ? 1 : 0),
+      target: entry.target,
+    })) as IntersectionObserverEntry[];
+
+    this.callback(full, this);
+  }
+
+  static reset(): void {
+    MockIntersectionObserver.instances = [];
+  }
+
+  static get last(): MockIntersectionObserver {
+    const instance = MockIntersectionObserver.instances.at(-1);
+    if (!instance) {
+      throw new Error('No IntersectionObserver instance has been created');
+    }
+    return instance;
+  }
+}
+```
+
+- [ ] **Step 4: Run the test and confirm it passes**
+
+Run: `npm test`
+Expected: PASS — the new stub tests pass and the existing smoke test still passes.
+
+- [ ] **Step 5: Add a `typecheck` script and Node globals for `vite.config.ts`**
+
+In `package.json`, change the scripts block to:
+
+```json
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+```
+
+In `eslint.config.js`, insert this block **before** the `**/*.{ts,tsx}` block:
+
+```js
+  {
+    files: ['vite.config.ts'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      globals: globals.node,
+    },
+  },
+```
+
+- [ ] **Step 6: Create `public/favicon.svg`**
+
+Task 15 also creates this file; creating it now removes a favicon 404 from every page load in the meantime. The content is identical to Task 15 Step 6.
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="16" fill="#FFFDF5" />
+  <circle cx="32" cy="30" r="20" fill="#8B5CF6" stroke="#1E293B" stroke-width="3" />
+  <text
+    x="32"
+    y="37"
+    font-family="Outfit, system-ui, sans-serif"
+    font-size="18"
+    font-weight="800"
+    fill="#FFFFFF"
+    text-anchor="middle"
+  >
+    RN
+  </text>
+</svg>
+```
+
+- [ ] **Step 7: Verify all three gates**
+
+Run: `npm test` → PASS.
+Run: `npm run lint` → no output, exit 0.
+Run: `npm run build` → `✓ built in`, exit 0.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add -A
+git commit -m "fix: harden the IntersectionObserver stub and add typecheck script"
+```
+
+---
+
 ### Task 2: The design token layer
 
 **Files:**
@@ -403,11 +662,15 @@ git commit -m "chore: scaffold Vite + React + Tailwind + Vitest project"
 
 - [ ] **Step 1: Write the failing token test `src/index.css.test.ts`**
 
+> **Why `import.meta.dirname` and not `new URL('./index.css', import.meta.url)`:**
+> Under Vitest's `jsdom` environment, `new URL(<literal>, import.meta.url)` is rewritten to an `http://localhost:3000/...` URL by Vitest's `NormalizeURLPlugin`, and `readFileSync` then throws `TypeError: The URL must be of scheme file`. `import.meta.dirname` is a real filesystem path in every environment and works under both `jsdom` and `node`. This was verified against this project's Vitest 5 + jsdom setup.
+
 ```ts
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const css = readFileSync(new URL('./index.css', import.meta.url), 'utf8');
+const css = readFileSync(join(import.meta.dirname, 'index.css'), 'utf8');
 
 describe('design token layer', () => {
   it('defines every brand colour', () => {
@@ -468,6 +731,18 @@ describe('design token layer', () => {
   });
 });
 ```
+
+- [ ] **Step 1b: Verify the utility classes actually resolve**
+
+The token test above only proves the CSS *contains* the token text. It does not prove the Tailwind utility classes the components use (`bg-cream`, `text-ink`, `shadow-pop`, `font-display`, `ease-bounce`, `animate-wiggle`) resolve against those tokens. A typo on either side renders a completely unstyled site that no other test catches.
+
+This is a build-and-grep check, not a unit test, because the utilities only exist in the compiled stylesheet. After the build in Step 4, run:
+
+```powershell
+Select-String -Path "dist\assets\*.css" -Pattern "\.bg-cream","\.text-ink","\.shadow-pop","\.font-display","\.ease-bounce","\.animate-wiggle" | Select-Object -ExpandProperty Pattern -Unique
+```
+
+Expected: all six utility class names are found in the compiled CSS. If any is missing, the corresponding token name in `src/index.css` is wrong — fix it before moving on.
 
 - [ ] **Step 2: Run the test and confirm it fails**
 
@@ -1693,11 +1968,16 @@ describe('useReveal', () => {
 
 describe('useActiveSection', () => {
   it('reports the id of the section in view', () => {
-    render(<ActiveProbe />);
-    const observer = MockIntersectionObserver.last;
+    // The sections must exist in the document BEFORE render, because the hook
+    // looks them up with document.getElementById inside its mount effect.
+    const alpha = document.createElement('section');
+    alpha.id = 'alpha';
     const beta = document.createElement('section');
     beta.id = 'beta';
-    document.body.appendChild(beta);
+    document.body.append(alpha, beta);
+
+    render(<ActiveProbe />);
+    const observer = MockIntersectionObserver.last;
     observer.emit([{ isIntersecting: true, target: beta }]);
     expect(screen.getByTestId('active')).toHaveTextContent('beta');
   });
@@ -1925,12 +2205,14 @@ const NAV_SECTION_IDS = navLinks.map((link) => link.href.slice(1));
 
 export function Nav() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  // Lazy initialiser, not a setState inside the effect: `eslint-plugin-react-hooks`
+  // v7 ships `set-state-in-effect` as an error, and a synchronous setState in an
+  // effect body is exactly what that rule targets.
+  const [scrolled, setScrolled] = useState(() => window.scrollY > 8);
   const active = useActiveSection(NAV_SECTION_IDS);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
