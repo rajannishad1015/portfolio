@@ -3,6 +3,7 @@ import type {
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react';
+import { cn } from '../../lib/cn';
 
 export type CandyVariant = 'primary' | 'secondary';
 
@@ -41,9 +42,12 @@ export function CandyLink({
   className = '',
   children,
   ...rest
-}: SharedProps & AnchorHTMLAttributes<HTMLAnchorElement>) {
+}: SharedProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+    href: string;
+  }) {
   return (
-    <a className={`${base} ${variants[variant]} ${className}`} {...rest}>
+    <a className={cn(base, variants[variant], className)} {...rest}>
       <Inner icon={icon}>{children}</Inner>
     </a>
   );
@@ -53,11 +57,16 @@ export function CandyButton({
   variant = 'primary',
   icon,
   className = '',
+  type = 'button',
   children,
   ...rest
 }: SharedProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} {...rest}>
+    <button
+      type={type}
+      className={cn(base, variants[variant], className)}
+      {...rest}
+    >
       <Inner icon={icon}>{children}</Inner>
     </button>
   );

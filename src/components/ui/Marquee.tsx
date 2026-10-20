@@ -1,3 +1,5 @@
+import { cn } from '../../lib/cn';
+
 type MarqueeProps = {
   items: readonly string[];
   reverse?: boolean;
@@ -8,15 +10,19 @@ type MarqueeProps = {
 export function Marquee({
   items,
   reverse = false,
-  duration = 28,
+  duration,
   className = '',
 }: MarqueeProps) {
   const track = [...items, ...items];
+  const speed = duration ?? (reverse ? 34 : 28);
   return (
-    <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
+    <div className={cn('relative overflow-hidden', className)} aria-hidden="true">
       <div
-        className={`flex w-max flex-nowrap items-center gap-3 pr-3 ${reverse ? 'animate-marquee-rev' : 'animate-marquee'}`}
-        style={{ animationDuration: `${duration}s` }}
+        className={cn(
+          'flex w-max flex-nowrap items-center gap-3 pr-3',
+          reverse ? 'animate-marquee-rev' : 'animate-marquee',
+        )}
+        style={{ animationDuration: `${speed}s` }}
       >
         {track.map((item, index) => (
           <span

@@ -13,7 +13,7 @@ describe('CandyButton', () => {
     render(<CandyButton>Get in touch</CandyButton>);
     const button = screen.getByRole('button', { name: 'Get in touch' });
     expect(button.className).toContain('bg-accent');
-    expect(button.className).toContain('shadow-pop');
+    expect(button.className).toMatch(/(\s|^)shadow-pop(\s|$)/);
     expect(button.className).toContain('rounded-full');
   });
 
@@ -41,6 +41,17 @@ describe('CandyLink', () => {
     );
     const icon = screen.getByTestId('icon');
     expect(icon.parentElement?.className).toContain('bg-white');
+  });
+
+  it('lets a consumer override the display class', () => {
+    render(
+      <CandyLink href="#projects" className="hidden sm:inline-flex">
+        View Projects
+      </CandyLink>,
+    );
+    const link = screen.getByRole('link', { name: 'View Projects' });
+    expect(link.className).toContain('hidden');
+    expect(link.className).not.toMatch(/(\s|^)inline-flex(\s|$)/);
   });
 });
 
@@ -93,6 +104,13 @@ describe('SectionTitle', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('The tools.')).toBeInTheDocument();
   });
+
+  it('omits the lead paragraph when no lead is given', () => {
+    const { queryByText } = render(
+      <SectionTitle eyebrow="Toolkit" title="Skills & Stack" />,
+    );
+    expect(queryByText('The tools.')).toBeNull();
+  });
 });
 
 describe('Marquee', () => {
@@ -103,7 +121,28 @@ describe('Marquee', () => {
 
   it('hides the strip from assistive technology', () => {
     const { container } = render(<Marquee items={['Python']} />);
-    expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
+    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('scrolls in reverse when asked', () => {
+    const { container } = render(<Marquee items={['Python']} reverse />);
+    const track = container.querySelector('[aria-hidden="true"]')
+      ?.firstElementChild;
+    expect(track?.className).toContain('animate-marquee-rev');
+  });
+
+  it('uses the slower speed for the reverse track', () => {
+    const { container } = render(<Marquee items={['Python']} reverse />);
+    const track = container.querySelector('[aria-hidden="true"]')
+      ?.firstElementChild;
+    expect(track).toHaveStyle({ animationDuration: '34s' });
+  });
+
+  it('honours an explicit duration', () => {
+    const { container } = render(<Marquee items={['Python']} duration={12} />);
+    const track = container.querySelector('[aria-hidden="true"]')
+      ?.firstElementChild;
+    expect(track).toHaveStyle({ animationDuration: '12s' });
   });
 });
 
@@ -111,5 +150,10 @@ describe('DotGrid', () => {
   it('renders a decorative panel', () => {
     const { container } = render(<DotGrid />);
     expect(container.querySelector('.dot-grid')).not.toBeNull();
+  });
+
+  it('is hidden from assistive technology', () => {
+    const { container } = render(<DotGrid />);
+    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
   });
 });

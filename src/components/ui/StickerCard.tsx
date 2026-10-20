@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import type { AccentColor } from '../../lib/theme';
+import { cn } from '../../lib/cn';
 
 export type CardShadow = 'default' | 'pink' | 'mint' | 'sun';
 
@@ -25,7 +26,7 @@ type StickerCardProps = {
   shadow?: CardShadow;
   className?: string;
   children?: ReactNode;
-} & HTMLAttributes<HTMLElement>;
+} & Omit<HTMLAttributes<HTMLElement>, 'title'>;
 
 export function StickerCard({
   title,
@@ -38,12 +39,19 @@ export function StickerCard({
 }: StickerCardProps) {
   return (
     <article
-      className={`relative rounded-xl border-2 border-ink bg-card p-6 pt-9 transition-all duration-300 ease-bounce hover:-rotate-1 hover:scale-[1.02] ${shadowClasses[shadow]} ${className}`}
+      className={cn(
+        'relative rounded-xl border-2 border-ink bg-card p-6 pt-9 transition-all duration-300 ease-bounce hover:-rotate-1 hover:scale-[1.02]',
+        shadowClasses[shadow],
+        className,
+      )}
       {...rest}
     >
       {icon ? (
         <span
-          className={`absolute -top-5 left-5 grid size-11 place-items-center rounded-full border-2 border-ink ${accentClasses[accent]}`}
+          className={cn(
+            'absolute -top-5 left-5 grid size-11 place-items-center rounded-full border-2 border-ink',
+            accentClasses[accent],
+          )}
           aria-hidden="true"
         >
           {icon}

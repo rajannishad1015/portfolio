@@ -1675,7 +1675,11 @@ Expected: FAIL — `Failed to resolve import "./CandyButton"`.
 - [ ] **Step 3: Write `src/components/ui/CandyButton.tsx`**
 
 ```tsx
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ReactNode,
+} from 'react';
 
 export type CandyVariant = 'primary' | 'secondary';
 
@@ -1695,11 +1699,7 @@ type SharedProps = {
   children: ReactNode;
 };
 
-function Inner({
-  variant = 'primary',
-  icon,
-  children,
-}: SharedProps) {
+function Inner({ icon, children }: Pick<SharedProps, 'icon' | 'children'>) {
   return (
     <>
       <span>{children}</span>
@@ -1718,12 +1718,10 @@ export function CandyLink({
   className = '',
   children,
   ...rest
-}: SharedProps & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+}: SharedProps & AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a className={`${base} ${variants[variant]} ${className}`} {...rest}>
-      <Inner variant={variant} icon={icon}>
-        {children}
-      </Inner>
+      <Inner icon={icon}>{children}</Inner>
     </a>
   );
 }
@@ -1737,9 +1735,7 @@ export function CandyButton({
 }: SharedProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button className={`${base} ${variants[variant]} ${className}`} {...rest}>
-      <Inner variant={variant} icon={icon}>
-        {children}
-      </Inner>
+      <Inner icon={icon}>{children}</Inner>
     </button>
   );
 }
@@ -1753,7 +1749,7 @@ import type { AccentColor } from '../../lib/theme';
 
 export type CardShadow = 'default' | 'pink' | 'mint' | 'sun';
 
-const accentClasses: Record<CardAccent, string> = {
+const accentClasses: Record<AccentColor, string> = {
   accent: 'bg-accent text-accent-foreground',
   pop: 'bg-pop text-ink',
   sun: 'bg-sun text-ink',
@@ -4082,5 +4078,5 @@ Expected: one commit per task, in order.
 
 **Placeholder scan** — the only `TODO` in the project is the four `// TODO: replace with the real live and source URLs` comments in `src/data/content.ts`, which the spec explicitly designates as the single owner-filled item (spec §6, §12). They render as a "Link coming soon" chip, never as a broken link.
 
-**Type consistency** — `AccentColor` is defined in `src/data/content.ts` and consumed by `StickerCard` via `CardAccent`; both resolve to the same five-string union, and `content.ts` uses `satisfies` so a typo in the data is a compile error. `IconName` is derived from the `ICONS` map, and `skillGroups`/`certifications` use `satisfies` against it. `useReveal` returns `RefObject<T | null>`, and every section attaches it to its `<section>` element. `useActiveSection` takes `readonly string[]`; both `Nav` and the hook's test pass a **module-level** constant (`NAV_SECTION_IDS`, `ACTIVE_IDS`) so the array identity is stable and the observer is not torn down and rebuilt on every render. Every icon named in `src/components/icons.ts` and every icon imported directly in a section (`ArrowRight`, `Download`, `Menu`, `X`, `Check`, `ExternalLink`, `Github`, `Linkedin`, `Mail`, `Phone`, `GraduationCap`) was verified to exist in `lucide-react@0.562.0` — the 1.x line removed the `Github` and `Linkedin` brand glyphs, which is why the version is pinned.
+**Type consistency** — `AccentColor` is defined once in `src/lib/theme.ts` and imported by both `src/data/content.ts` and `src/components/ui/StickerCard.tsx`, so there is exactly one declaration of the five-colour union; `content.ts` uses `satisfies` so a typo in the data is a compile error. `IconName` is derived from the `ICONS` map, and `skillGroups`/`certifications` use `satisfies` against it. `useReveal` returns `RefObject<T | null>`, and every section attaches it to its `<section>` element. `useActiveSection` takes `readonly string[]`; both `Nav` and the hook's test pass a **module-level** constant (`NAV_SECTION_IDS`, `ACTIVE_IDS`) so the array identity is stable and the observer is not torn down and rebuilt on every render. Every icon named in `src/components/icons.ts` and every icon imported directly in a section (`ArrowRight`, `Download`, `Menu`, `X`, `Check`, `ExternalLink`, `Github`, `Linkedin`, `Mail`, `Phone`, `GraduationCap`) was verified to exist in `lucide-react@0.562.0` — the 1.x line removed the `Github` and `Linkedin` brand glyphs, which is why the version is pinned.
 ```
