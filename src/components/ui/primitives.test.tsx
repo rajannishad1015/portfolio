@@ -135,7 +135,7 @@ describe('Marquee', () => {
     const { container } = render(<Marquee items={['Python']} reverse />);
     const track = container.querySelector('[aria-hidden="true"]')
       ?.firstElementChild;
-    expect(track).toHaveStyle({ animationDuration: '34s' });
+    expect(track).toHaveStyle({ animationDuration: '56s' });
   });
 
   it('honours an explicit duration', () => {

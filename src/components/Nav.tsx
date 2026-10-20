@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Download, Menu, X } from 'lucide-react';
-import { links, navLinks, profile } from '../data/content';
+import { ArrowRight, Menu, X } from 'lucide-react';
+import { navLinks } from '../data/content';
 import { useActiveSection } from '../hooks/useActiveSection';
-import { CandyLink } from './ui/CandyButton';
+import { cn } from '../lib/cn';
+import { BrandLogo } from './hero/BrandLogo';
 
-const NAV_SECTION_IDS = navLinks.map((link) => link.href.slice(1));
+const NAV_ITEMS = [{ href: '#home', label: 'Home' }, ...navLinks] as const;
+
+const NAV_SECTION_IDS = NAV_ITEMS.map((link) => link.href.slice(1));
 
 export function Nav() {
   const [open, setOpen] = useState(false);
-  // Lazy initialiser, not a setState inside the effect: `eslint-plugin-react-hooks`
-  // v7 ships `set-state-in-effect` as an error, and a synchronous setState in an
-  // effect body is exactly what that rule targets.
   const [scrolled, setScrolled] = useState(() => window.scrollY > 8);
   const active = useActiveSection(NAV_SECTION_IDS);
 
@@ -35,51 +35,62 @@ export function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-shadow duration-300 ${
-        scrolled ? 'bg-cream/90 shadow-pop backdrop-blur' : 'bg-transparent'
-      }`}
+      className={cn(
+        'sticky top-0 z-50 transition-shadow duration-300',
+        scrolled ? 'bg-cream/90 shadow-pop backdrop-blur' : 'bg-transparent',
+      )}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+      <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-6 px-6 py-4">
         <a
           href="#home"
-          aria-label={`${profile.name} — back to top`}
-          className="grid size-11 shrink-0 place-items-center rounded-full border-2 border-ink bg-accent font-display text-lg font-extrabold text-accent-foreground shadow-pop transition-transform duration-300 ease-bounce hover:-rotate-6"
+          aria-label="Rajan Nishad — back to top"
+          className="animate-enter-down shrink-0 transition-transform duration-300 ease-bounce hover:-translate-y-0.5"
         >
-          {profile.initials}
+          <BrandLogo />
         </a>
 
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-1 lg:flex"
-        >
-          {navLinks.map((link) => {
+        <nav aria-label="Primary" className="hidden items-center lg:flex">
+          {NAV_ITEMS.map((link) => {
             const isActive = active === link.href.slice(1);
             return (
               <a
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? 'true' : undefined}
-                className={`rounded-full px-4 py-2 font-display text-sm font-bold transition-colors duration-300 ${
-                  isActive
-                    ? 'bg-accent text-accent-foreground'
-                    : 'text-ink hover:bg-sun'
-                }`}
+                className={cn(
+                  'group relative px-4 py-2 font-body text-base font-medium transition-all duration-300 ease-bounce hover:-translate-y-0.5',
+                  isActive ? 'text-accent' : 'text-ink hover:text-accent',
+                )}
               >
                 {link.label}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-x-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-accent transition-transform duration-300',
+                    isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+                  )}
+                />
               </a>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-3">
-          <CandyLink
-            href={links.resumeHref}
-            download
-            icon={<Download size={14} strokeWidth={2.5} />}
-            className="hidden sm:inline-flex"
+          <a
+            href="#contact"
+            className="group hidden min-h-11 items-center gap-2.5 rounded-full border-2 border-ink bg-accent px-5 font-display text-sm font-bold text-accent-foreground shadow-pop transition-all duration-300 ease-bounce hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-pop-hover active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-active sm:inline-flex"
           >
-            Download CV
-          </CandyLink>
+            Let&apos;s Connect
+            <span className="grid size-6 place-items-center rounded-full bg-white text-accent">
+              <ArrowRight
+                size={13}
+                strokeWidth={2.5}
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </span>
+          </a>
+
           <button
             type="button"
             aria-expanded={open}
@@ -104,9 +115,9 @@ export function Nav() {
         >
           <nav
             aria-label="Mobile"
-            className="flex flex-col items-center gap-4"
+            className="flex flex-col items-center gap-5"
           >
-            {navLinks.map((link) => (
+            {NAV_ITEMS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}

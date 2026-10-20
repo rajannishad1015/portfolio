@@ -12,11 +12,12 @@ export function Contact() {
     <section
       id="contact"
       ref={ref}
-      className="relative px-6 py-20 lg:py-24"
+      className="relative bg-sand px-6 py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
-          eyebrow="Say Hello"
+          index="06"
+        eyebrow="Say Hello"
           title="Contact"
           lead="Open to Data Analyst and Data Science roles in Mumbai, or fully remote."
         />

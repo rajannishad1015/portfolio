@@ -22,12 +22,20 @@ npm run dev      # http://localhost:5173
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint over the project |
 | `npm test` | Run the Vitest suite once |
+| `npm run audit` | Headless-browser check for horizontal overflow and unrevealed content at 360 / 390 / 768 / 1024 / 1440 px |
+| `npm run shots` | Capture reference screenshots into `shots/` |
+
+`audit` and `shots` drive your locally installed Chrome through `puppeteer-core` — no browser is downloaded. If Chrome is not in a standard location, point `CHROME_PATH` at it. Both expect the site to be served (run `npm run build && npm run preview` first); override the URL with `SITE_URL`.
 
 ## Editing the content
 
 Everything on the page comes from `src/data/content.ts`:
 
-- `profile` — name, roles, summary, about copy, soft skills
+- `profile` — name, roles, greeting, role line, intro copy, summary, about, soft skills
+- `heroStats` — the three headline statistics in the hero
+- `floatingSkills` — the three sticker cards around the portrait
+- `socials` — the circular social buttons and their destinations
+- `heroNotes` — the two handwritten notes
 - `links` — email, phone, GitHub, LinkedIn, resume path
 - `skillGroups` — the five toolkit cards
 - `projects` — the four project cards, their bullets, metrics and tags
@@ -37,6 +45,15 @@ Everything on the page comes from `src/data/content.ts`:
 ### Project links
 
 Each project carries `links.live` and `links.source`. They are currently `"#"`, which renders an honest **Link coming soon** chip. Replace `"#"` with a real URL and the chip becomes a clickable button automatically.
+
+### The hero portrait
+
+The hero shows a **placeholder frame**, not a stock photo or a generated face. To use a real photo:
+
+1. Put the PNG at `public/images/rajan-portrait.png`.
+2. In `src/data/content.ts`, set `profile.portraitSrc` to `'/images/rajan-portrait.png'`.
+
+The frame renders the image with `object-fit: contain`, so nothing is cropped, stretched or distorted, and a transparent PNG keeps its transparency. `profile.portraitPath` is the path shown in the placeholder, so change it if you use a different filename.
 
 ## Design system
 
@@ -51,9 +68,11 @@ Tokens live in `src/index.css` under Tailwind v4's `@theme`:
 | `--color-sun` | `#FBBF24` |
 | `--color-mint` | `#34D399` |
 | `--shadow-pop` | `4px 4px 0 0 #1E293B` |
+| `--shadow-sticker` | `6px 6px 0 0 #1E293B` |
 | `--ease-bounce` | `cubic-bezier(0.34, 1.56, 0.64, 1)` |
+| `--ease-out-soft` | `cubic-bezier(0.22, 1, 0.36, 1)` |
 
-Motion keyframes: `wiggle`, `float-y`, `float-x`, `pop-in`, `marquee`, `marquee-rev`, `blob`, `confetti`, `role-swap`. Every animation is disabled under `prefers-reduced-motion: reduce`.
+Motion keyframes: `enter-up`, `enter-scale`, `enter-down`, `wiggle`, `float-y`, `float-x`, `pop-in`, `marquee`, `marquee-rev`, `blob`, `confetti`, `role-swap`, `tilt`, `wave`. Every animation is disabled under `prefers-reduced-motion: reduce`, where the entrance delays are also zeroed so nothing is ever left invisible.
 
 ## Deploying
 

@@ -7,44 +7,44 @@ type Shape = {
 
 const shapes: Shape[] = [
   {
-    className: 'size-16 rounded-full bg-pop',
-    style: { top: '12%', left: '6%' },
+    className: 'size-14 rounded-full bg-pop',
+    style: { top: '3%', left: '66%' },
   },
   {
-    className: 'h-12 w-12 rotate-12 bg-sun',
-    style: { top: '26%', left: '18%' },
+    className: 'h-10 w-10 rotate-12 bg-sun',
+    style: { top: '6%', left: '84%' },
   },
   {
-    className: 'size-10 rounded-full bg-mint',
-    style: { top: '8%', right: '12%' },
+    className: 'size-9 rounded-full bg-mint',
+    style: { top: '12%', right: '1%' },
   },
   {
-    className: 'h-14 w-20 rounded-t-full bg-accent/30',
-    style: { top: '34%', right: '5%' },
+    className: 'h-12 w-16 rounded-t-full bg-accent/30',
+    style: { top: '26%', right: '0%' },
   },
   {
-    className: 'size-8 rotate-45 bg-accent',
-    style: { bottom: '22%', left: '10%' },
+    className: 'size-7 rotate-45 bg-accent',
+    style: { top: '42%', right: '2%' },
   },
   {
-    className: 'h-10 w-16 rounded-full bg-sun/60',
-    style: { bottom: '14%', right: '16%' },
+    className: 'size-10 rounded-full bg-accent/20',
+    style: { top: '58%', right: '0%' },
   },
   {
-    className: 'size-12 rounded-full bg-accent/20',
-    style: { bottom: '30%', left: '42%' },
-  },
-  {
-    className: 'size-7 rotate-45 bg-pop',
-    style: { top: '46%', left: '3%' },
-  },
-  {
-    className: 'h-9 w-9 rounded-t-full bg-mint',
-    style: { top: '18%', right: '32%' },
+    className: 'h-8 w-14 rounded-full bg-sun/60',
+    style: { top: '70%', right: '4%' },
   },
   {
     className: 'size-9 rounded-full bg-sun',
-    style: { bottom: '8%', left: '30%' },
+    style: { bottom: '16%', left: '80%' },
+  },
+  {
+    className: 'size-7 rotate-45 bg-pop',
+    style: { bottom: '21%', left: '70%' },
+  },
+  {
+    className: 'h-9 w-9 rounded-t-full bg-mint',
+    style: { bottom: '26%', left: '60%' },
   },
 ];
 
@@ -60,8 +60,8 @@ export function FloatingShapes() {
           className={`absolute animate-confetti ${shape.className}`}
           style={{
             ...shape.style,
-            animationDelay: `${index * 0.9}s`,
-            animationDuration: `${9 + (index % 5)}s`,
+            animationDelay: `${index * 1.3}s`,
+            animationDuration: `${16 + (index % 5) * 2}s`,
           }}
         />
       ))}

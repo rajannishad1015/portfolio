@@ -11,13 +11,94 @@ const SOFT_SKILLS = [
 export const profile = {
   name: 'Rajan Nishad',
   initials: 'RN',
+  firstName: 'Rajan',
+  lastName: 'Nishad',
   roles: ['Data Analyst', 'Data Scientist', 'ML Engineer', 'Full-Stack Builder'],
   availability: 'Available for Data Analyst / Data Science roles',
+  greeting: "Hello, I'm",
+  roleLine:
+    'Data Science Student | ML & Analytics | Full-Stack Builder',
+  introBefore:
+    "I'm a final-year Data Science student in Mumbai with a passion for turning messy data into decisions people can act on — predictive models, analytics dashboards and full-stack data platforms. I love strategies that drive real results, and I'm on my way to becoming a ",
+  introHighlight: 'Data Scientist',
+  introAfter: '.',
+  /**
+   * The hero portrait is a placeholder until a real photo is supplied.
+   * Drop the PNG at this path and set `portraitSrc` to it — the frame renders
+   * the image with `object-fit: contain` so nothing is cropped or stretched.
+   */
+  portraitPath: '/images/rajan-portrait.png',
+  portraitSrc: null as string | null,
+  portraitAlt: 'Rajan Nishad, Data Science student at Kes Shroff College, Mumbai',
   summary:
     'Final-year Data Science student at Kes Shroff College, Mumbai, building end-to-end analytics dashboards, predictive models and full-stack data platforms from raw data to actionable insight.',
   about:
     'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai or remote.',
   softSkills: SOFT_SKILLS,
+} as const;
+
+export const heroStats = [
+  { value: '4', label: 'Shipped Projects', icon: 'barChart3', tone: 'pop' },
+  { value: '8', label: 'Certifications', icon: 'lightbulb', tone: 'sun' },
+  { value: '90%', label: 'Forecast Accuracy', icon: 'rocket', tone: 'mint' },
+] as const satisfies ReadonlyArray<{
+  value: string;
+  label: string;
+  icon: IconName;
+  tone: 'pop' | 'sun' | 'mint';
+}>;
+
+export const floatingSkills = [
+  { title: 'Data & Analytics', icon: 'barChart3', tone: 'pop' },
+  { title: 'B.Sc. Data Science', icon: 'graduationCap', tone: 'sun' },
+  { title: 'SQL & Pipelines', icon: 'database', tone: 'accent' },
+] as const satisfies ReadonlyArray<{
+  title: string;
+  icon: IconName;
+  tone: 'pop' | 'sun' | 'accent';
+}>;
+
+export const socials = [
+  {
+    label: 'Email',
+    href: 'mailto:rajannishad1015@gmail.com',
+    icon: 'mail',
+    external: false,
+  },
+  {
+    label: 'GitHub',
+    href: 'https://github.com/Rajannishad1015',
+    icon: 'github',
+    external: true,
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://linkedin.com/in/rajanishad',
+    icon: 'linkedin',
+    external: true,
+  },
+  {
+    label: 'Website',
+    href: 'https://rajann.me',
+    icon: 'globe',
+    external: true,
+  },
+] as const satisfies ReadonlyArray<{
+  label: string;
+  href: string;
+  icon: IconName;
+  external: boolean;
+}>;
+
+export const heroNotes = {
+  top: {
+    lines: ['Keep Learning', 'Keep Growing'],
+    caption: 'A note to self',
+  },
+  bottom: {
+    lines: ['Better Data', 'Better Decisions'],
+    caption: 'The north star',
+  },
 } as const;
 
 export const links = {

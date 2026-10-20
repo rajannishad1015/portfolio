@@ -15,7 +15,8 @@ export function About() {
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
-          eyebrow="Who I Am"
+          index="01"
+        eyebrow="Who I Am"
           title="About"
           lead="A data science student who ships the whole thing — model, dashboard and the product around it."
         />

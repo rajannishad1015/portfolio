@@ -11,11 +11,12 @@ export function Education() {
     <section
       id="education"
       ref={ref}
-      className="relative px-6 py-20 lg:py-24"
+      className="relative bg-sand px-6 py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
-          eyebrow="Background"
+          index="04"
+        eyebrow="Background"
           title="Education"
           lead="A B.Sc. in Data Science in Mumbai, on the way to a first full-time role."
         />

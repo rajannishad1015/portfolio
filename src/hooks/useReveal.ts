@@ -5,13 +5,13 @@ type RevealOptions = {
   rootMargin?: string;
 };
 
-const STAGGER_MS = 90;
-const MAX_STAGGER_STEPS = 8;
+const STAGGER_MS = 60;
+const MAX_STAGGER_STEPS = 6;
 
 export function useReveal<T extends HTMLElement = HTMLElement>(
   options: RevealOptions = {},
 ) {
-  const { threshold = 0.2, rootMargin = '0px 0px -10% 0px' } = options;
+  const { threshold = 0, rootMargin = '0px 0px -5% 0px' } = options;
   const ref = useRef<T | null>(null);
 
   // useLayoutEffect, not useEffect: the scope attribute must be on the
@@ -45,9 +45,13 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
       );
     }
 
+    const reveal = (target: Element) => {
+      target.setAttribute('data-revealed', 'true');
+    };
+
     if (typeof IntersectionObserver === 'undefined') {
       for (const target of targets) {
-        target.setAttribute('data-revealed', 'true');
+        reveal(target);
       }
       return;
     }
@@ -55,14 +59,8 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          // isIntersecting is true for any overlap, even a sliver, so the
-          // ratio must be checked too or a barely-visible element is
-          // revealed and unobserved before the reader ever reaches it.
-          if (entry.isIntersecting && entry.intersectionRatio >= threshold) {
-            (entry.target as HTMLElement).setAttribute(
-              'data-revealed',
-              'true',
-            );
+          if (entry.isIntersecting) {
+            reveal(entry.target);
             observer.unobserve(entry.target);
           }
         }
@@ -72,6 +70,16 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
 
     for (const target of targets) {
       observer.observe(target);
+    }
+
+    // Anything already in (or above) the viewport on mount is revealed
+    // straight away, so the first screen never depends on the observer
+    // firing and content is never left stranded invisible.
+    for (const target of targets) {
+      if (target.getBoundingClientRect().top < window.innerHeight) {
+        reveal(target);
+        observer.unobserve(target);
+      }
     }
 
     return () => {

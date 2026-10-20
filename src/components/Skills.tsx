@@ -11,11 +11,12 @@ export function Skills() {
     <section
       id="skills"
       ref={ref}
-      className="relative px-6 py-20 lg:py-24"
+      className="relative bg-sand px-6 py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
-          eyebrow="Toolkit"
+          index="02"
+        eyebrow="Toolkit"
           title="Skills & Stack"
           lead="The tools I reach for, from the first exploratory chart to the API in front of it."
         />

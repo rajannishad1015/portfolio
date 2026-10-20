@@ -28,7 +28,8 @@ export function Certifications() {
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
-          eyebrow="Credentials"
+          index="05"
+        eyebrow="Credentials"
           title="Certifications"
           lead="Eight programmes across Google, IBM, Harvard, Columbia and Oracle Cloud."
         />

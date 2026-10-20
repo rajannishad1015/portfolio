@@ -6,12 +6,27 @@ import { Nav } from './Nav';
 describe('Nav', () => {
   it('renders a labelled navigation landmark', () => {
     render(<Nav />);
-    expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('navigation', { name: 'Primary' }),
+    ).toBeInTheDocument();
   });
 
-  it('links to every section', () => {
+  it('shows the brand as a home link', () => {
     render(<Nav />);
-    for (const label of ['About', 'Skills', 'Projects', 'Education', 'Contact']) {
+    const brand = screen.getByRole('link', { name: /back to top/i });
+    expect(brand).toHaveAttribute('href', '#home');
+  });
+
+  it('links to every real section', () => {
+    render(<Nav />);
+    for (const label of [
+      'Home',
+      'About',
+      'Skills',
+      'Projects',
+      'Education',
+      'Contact',
+    ]) {
       expect(screen.getByRole('link', { name: label })).toHaveAttribute(
         'href',
         `#${label.toLowerCase()}`,
@@ -19,10 +34,11 @@ describe('Nav', () => {
     }
   });
 
-  it('offers the resume for download', () => {
+  it('offers a connect call to action', () => {
     render(<Nav />);
-    const resume = screen.getByRole('link', { name: /download cv/i });
-    expect(resume).toHaveAttribute('href', '/resume.pdf');
+    expect(
+      screen.getByRole('link', { name: /let.s connect/i }),
+    ).toHaveAttribute('href', '#contact');
   });
 
   it('opens and closes the mobile menu', async () => {

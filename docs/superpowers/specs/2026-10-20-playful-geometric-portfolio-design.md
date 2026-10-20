@@ -131,29 +131,37 @@ The nav link order (About → Skills → Projects → Education → Contact) mat
 
 ### 5.1 Nav
 
-Sticky top bar. Left: "RN" mark inside a violet circle with a hard shadow. Centre/right: anchor links — About, Skills, Projects, Education, Contact — plus a "Download CV" CandyButton linking to `/resume.pdf`. On scroll the bar gains the cream translucent background, backdrop blur and a hard shadow. The link for the section currently in view is highlighted. Below the `lg` breakpoint the links collapse into a full-screen playful menu button (three chunky bars) that opens an overlay listing the same anchors at display size.
+Sticky top bar, `max-w-[90rem]` container.
+
+- **Left — brand lock-up** (`hero/BrandLogo.tsx`): "Rajan" in violet with a hand-drawn yellow underline beneath it, "Nishad" in deep navy, Outfit ExtraBold, 28 px on desktop, plus two or three short yellow accent strokes. The whole lock-up is a link to `#home`.
+- **Centre — nav links**: Home, About, Skills, Projects, Education, Contact. Every one points at a real section id. Plus Jakarta Sans, medium weight, deep navy, no background. The active link is violet with a short violet underline; on hover the link turns violet, lifts 1 px and the underline scales in from the left.
+- **Right — "Let's Connect →"**: violet pill, white text, 2px dark border, 4px hard dark shadow, with a white circular icon container holding a violet arrow. Hover lifts up-and-left 2px and extends the shadow to 6px; the arrow slides right. Links to `#contact`.
+- On scroll the bar gains the cream translucent background, backdrop blur and a hard shadow. Below `lg` the links collapse into a menu button that opens a full-screen overlay listing the same anchors.
 
 ### 5.2 Hero
 
-Two-column grid (6/6) on `lg` and up, stacked below.
+Two-column grid (1.02fr / 0.98fr) on `lg` and up, stacked below. Three layers: background decorations, copy and portrait, foreground stickers and notes.
 
 **Left column**
 
-1. Availability chip — mint circle + "Available for Data Analyst / Data Science roles".
-2. `h1` — "Rajan Nishad", display font, 800 weight.
-3. Rotating role word — "Data Analyst", "Data Scientist", "ML Engineer", "Full-Stack Builder", cycling every ~2.4 s with a slide + blur transition.
-4. Summary paragraph — condensed from the resume summary.
-5. CTA row — "View Projects" (CandyButton primary, `ArrowRight` in a white circle, scrolls to `#projects`) and "Download CV" (CandyButton secondary, `Download` icon, links to `/resume.pdf`).
-6. Tech marquee — two rows, opposite directions, of skill keywords.
+1. Greeting — a waving hand emoji and "Hello, I'm".
+2. `h1` — "Rajan" (violet, ink cut-paper shadow) over "Nishad" (deep navy, violet cut-paper shadow), `clamp(3rem, 8.2vw, 6.5rem)`, leading 0.9, with three small yellow accent strokes beside the first line.
+3. Role line — "Data Science Student | ML & Analytics | Full-Stack Builder".
+4. Introduction paragraph, with "Data Scientist" set in violet semibold.
+5. CTA row — "View My Work →" (violet pill, white circular arrow container, links to `#projects`) and "Download Resume ↓" (cream pill, 2px navy border, hard shadow, fills yellow on hover, links to `/resume.pdf`).
+6. Statistic row — three groups separated by thin vertical dividers: a circular icon in pink/amber/mint, a large value, and a supporting label.
+7. Social links — "Connect with me" and four circular icon buttons (Email, GitHub, LinkedIn, Website), each with an accessible name.
 
-**Right column — pure geometry (no photo)**
+**Right column — the portrait stage**
 
-- A large amber circle behind the composition.
-- A dot-grid panel behind the shapes.
-- Six technology pills (Python, SQL, Power BI, Scikit-learn, Next.js, FastAPI) are absolutely positioned around the amber circle, each with its own independent float animation. They do not rotate as a rigid orbit — each drifts on its own axis and duration.
-- A blob-morph shape.
-- A squiggle SVG.
-- A tilted "code snippet" sticker card showing a small representative snippet.
+- **Portrait frame** (`hero/PortraitPlaceholder.tsx`): an organic asymmetric border radius, a 2px dark border, and sketchy corner strokes drawn just outside the frame. The portrait itself is a **replaceable PNG placeholder** — `profile.portraitSrc` is `null`, so a neutral cream placeholder is shown with the path that the image should be dropped at. When a source is supplied the image renders with `object-fit: contain`, so nothing is cropped or stretched. No portrait is ever fabricated.
+- **Background decorations** (`hero/GeometricDecorations.tsx` → `PortraitDecorations`): a large amber circle behind the portrait, a violet triangle at its upper left, a pink organic blob at its lower right, a mint squiggle along the circle's left edge, three dot-grid clusters, navy accent lines and a curved arrow. They are positioned inside the stage so they always align with the portrait.
+- **Floating skill cards** (`hero/FloatingSkillCards.tsx`): three sticker cards (pink / amber / violet) with an icon bubble and a title, each rotated a couple of degrees, straightening and lifting on hover.
+- **Handwritten notes** (`hero/HeroNotes.tsx`): "Keep Learning / Keep Growing" in Caveat with a violet squiggle underline and a curved arrow toward the portrait, and a mint sticker card reading "Better Data / Better Decisions".
+
+**Page-edge decorations** (`SectionDecorations`): a yellow corner wedge, a small yellow diamond and a pink triangle, all confined to the outer margins so they can never land on the copy.
+
+**Entrance motion** — staggered CSS keyframes: the navbar slides down, the greeting and heading lines rise, the paragraph and buttons rise, the portrait scales in from 0.96, the skill cards and notes fade in last. All of it is disabled under `prefers-reduced-motion: reduce`, where the delays are zeroed as well so nothing is ever left invisible.
 
 ### 5.3 Skills
 
