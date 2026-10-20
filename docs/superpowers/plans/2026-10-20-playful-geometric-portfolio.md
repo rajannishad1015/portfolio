@@ -28,6 +28,7 @@
 | `src/index.css` | Tailwind import, `@theme` token layer, base styles, keyframes, reveal CSS, reduced-motion rules. |
 | `src/data/content.ts` | Every string, list and link on the site. Single source of truth. |
 | `src/data/content.test.ts` | Content integrity tests. |
+| `src/lib/theme.ts` | The shared `AccentColor` union, used by both the content model and the UI primitives. |
 | `src/components/icons.ts` | `IconName` union + `ICONS` map from lucide-react. |
 | `src/components/ui/CandyButton.tsx` | `CandyButton` (button) and `CandyLink` (anchor) primitives. |
 | `src/components/ui/StickerCard.tsx` | Sticker card primitive. |
@@ -1055,6 +1056,7 @@ git commit -m "feat: add Playful Geometric design token layer"
 
 **Files:**
 - Create: `src/components/icons.ts`
+- Create: `src/lib/theme.ts`
 - Create: `src/data/content.ts`
 - Create: `src/data/content.test.ts`
 
@@ -1078,7 +1080,9 @@ describe('content model', () => {
   it('describes the owner', () => {
     expect(profile.name).toBe('Rajan Nishad');
     expect(profile.roles).toHaveLength(4);
-    expect(profile.roles.every((role) => role.trim().length > 0)).toBe(true);
+    for (const role of profile.roles) {
+      expect(role.trim()).not.toBe('');
+    }
     expect(profile.summary.length).toBeGreaterThan(80);
     expect(profile.about.length).toBeGreaterThan(80);
     expect(profile.availability.length).toBeGreaterThan(0);
@@ -1096,7 +1100,9 @@ describe('content model', () => {
     expect(skillGroups).toHaveLength(5);
     for (const group of skillGroups) {
       expect(group.items.length).toBeGreaterThan(0);
-      expect(group.items.every((item) => item.trim().length > 0)).toBe(true);
+      for (const item of group.items) {
+        expect(item.trim()).not.toBe('');
+      }
     }
     const flat = skillGroups.flatMap((group) => group.items);
     expect(flat).toContain('Power BI');
@@ -1120,7 +1126,13 @@ describe('content model', () => {
   it('has three education entries and eight certifications', () => {
     expect(education).toHaveLength(3);
     expect(certifications).toHaveLength(8);
-    expect(certifications.every((cert) => cert.initial.length === 1)).toBe(true);
+    for (const cert of certifications) {
+      expect(cert.initial.length).toBeGreaterThan(0);
+      expect(cert.initial.length).toBeLessThanOrEqual(2);
+    }
+    // Distinct initials, so no two badge tiles render identically.
+    const initials = certifications.map((cert) => cert.initial);
+    expect(new Set(initials).size).toBe(initials.length);
   });
 
   it('has four stats and a nav link per section', () => {
@@ -1146,63 +1158,49 @@ Expected: FAIL — `Failed to resolve import "./content"`.
 
 - [ ] **Step 3: Write `src/components/icons.ts`**
 
+Only the five icons the skill groups actually use are mapped — the map is the single source of truth for `IconName`, and unused entries would be dead code.
+
 ```ts
 import {
-  Award,
   BarChart3,
-  Brain,
-  Briefcase,
-  Building2,
   Cloud,
   Code2,
   Database,
-  Flame,
-  GraduationCap,
-  Lightbulb,
-  LineChart,
-  Rocket,
-  Server,
-  Sparkles,
-  Target,
-  Terminal,
   Users,
-  Wrench,
-  Zap,
   type LucideIcon,
 } from 'lucide-react';
 
 export const ICONS = {
-  award: Award,
   barChart3: BarChart3,
-  brain: Brain,
-  briefcase: Briefcase,
-  building2: Building2,
   cloud: Cloud,
   code2: Code2,
   database: Database,
-  flame: Flame,
-  graduationCap: GraduationCap,
-  lightbulb: Lightbulb,
-  lineChart: LineChart,
-  rocket: Rocket,
-  server: Server,
-  sparkles: Sparkles,
-  target: Target,
-  terminal: Terminal,
   users: Users,
-  wrench: Wrench,
-  zap: Zap,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof ICONS;
 ```
 
+- [ ] **Step 3b: Write `src/lib/theme.ts`**
+
+The accent union lives here — not in the content model and not in a UI primitive — so both sides import one declaration and a new accent colour cannot be added in one place and missed in the other.
+
+```ts
+export type AccentColor = 'accent' | 'pop' | 'sun' | 'mint' | 'ink';
+```
+
 - [ ] **Step 4: Write `src/data/content.ts`**
 
 ```ts
+import type { AccentColor } from '../lib/theme';
 import type { IconName } from '../components/icons';
 
-export type AccentColor = 'accent' | 'pop' | 'sun' | 'mint' | 'ink';
+const SOFT_SKILLS = [
+  'Problem-Solving',
+  'Critical Thinking',
+  'Communication',
+  'Attention to Detail',
+] as const;
 
 export const profile = {
   name: 'Rajan Nishad',
@@ -1213,12 +1211,7 @@ export const profile = {
     'Final-year Data Science student at Kes Shroff College, Mumbai, building end-to-end analytics dashboards, predictive models and full-stack data platforms from raw data to actionable insight.',
   about:
     'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai or remote.',
-  softSkills: [
-    'Problem-Solving',
-    'Critical Thinking',
-    'Communication',
-    'Attention to Detail',
-  ],
+  softSkills: SOFT_SKILLS,
 } as const;
 
 export const links = {
@@ -1236,7 +1229,7 @@ export const stats = [
   { value: '8', label: 'Certifications earned' },
   { value: '150+', label: 'Global stores served' },
   { value: '20+', label: 'Mumbai localities modelled' },
-] as const;
+] as const satisfies ReadonlyArray<{ value: string; label: string }>;
 
 export const skillGroups = [
   {
@@ -1259,7 +1252,11 @@ export const skillGroups = [
     color: 'sun',
     icon: 'code2',
     items: [
-      'Python (Pandas, NumPy, Scikit-learn, FastAPI)',
+      'Python',
+      'Pandas',
+      'NumPy',
+      'Scikit-learn',
+      'FastAPI',
       'Java',
       'C++',
       'JavaScript',
@@ -1284,12 +1281,7 @@ export const skillGroups = [
     title: 'Soft Skills',
     color: 'ink',
     icon: 'users',
-    items: [
-      'Problem-Solving',
-      'Critical Thinking',
-      'Communication',
-      'Attention to Detail',
-    ],
+    items: SOFT_SKILLS,
   },
 ] as const satisfies ReadonlyArray<{
   id: string;
@@ -1397,7 +1389,7 @@ export const education = [
     id: 'kes-shroff',
     institution: 'Kes Shroff College, Mumbai',
     qualification: 'B.Sc. Data Science',
-    period: '2023 — 2027',
+    period: '2024 — 2027',
     year: '2027',
     detail: 'Expected 2027',
     current: true,
@@ -1420,7 +1412,15 @@ export const education = [
     detail: '',
     current: false,
   },
-] as const;
+] as const satisfies ReadonlyArray<{
+  id: string;
+  institution: string;
+  qualification: string;
+  period: string;
+  year: string;
+  detail: string;
+  current: boolean;
+}>;
 
 export const certifications = [
   {
@@ -1434,21 +1434,21 @@ export const certifications = [
     id: 'ibm-ml-python',
     issuer: 'IBM',
     name: 'Machine Learning With Python',
-    initial: 'I',
+    initial: 'ML',
     color: 'accent',
   },
   {
     id: 'ibm-python-ds',
     issuer: 'IBM',
     name: 'Python for Data Science',
-    initial: 'I',
+    initial: 'PY',
     color: 'accent',
   },
   {
     id: 'ibm-ai-dev',
     issuer: 'IBM',
     name: 'AI & Development',
-    initial: 'I',
+    initial: 'AI',
     color: 'accent',
   },
   {
@@ -1469,14 +1469,14 @@ export const certifications = [
     id: 'oracle-ai-foundations',
     issuer: 'Oracle Cloud Infrastructure',
     name: 'AI Foundations Associate',
-    initial: 'O',
+    initial: 'OA',
     color: 'ink',
   },
   {
     id: 'oracle-data-science',
     issuer: 'Oracle Cloud Infrastructure',
     name: 'Data Science',
-    initial: 'O',
+    initial: 'OD',
     color: 'ink',
   },
 ] as const satisfies ReadonlyArray<{
@@ -1493,7 +1493,7 @@ export const navLinks = [
   { href: '#projects', label: 'Projects' },
   { href: '#education', label: 'Education' },
   { href: '#contact', label: 'Contact' },
-] as const;
+] as const satisfies ReadonlyArray<{ href: string; label: string }>;
 
 export const sectionIds = [
   'home',
@@ -1749,8 +1749,8 @@ export function CandyButton({
 
 ```tsx
 import type { HTMLAttributes, ReactNode } from 'react';
+import type { AccentColor } from '../../lib/theme';
 
-export type CardAccent = 'accent' | 'pop' | 'sun' | 'mint' | 'ink';
 export type CardShadow = 'default' | 'pink' | 'mint' | 'sun';
 
 const accentClasses: Record<CardAccent, string> = {
@@ -1770,7 +1770,7 @@ const shadowClasses: Record<CardShadow, string> = {
 
 type StickerCardProps = {
   title?: ReactNode;
-  accent?: CardAccent;
+  accent?: AccentColor;
   icon?: ReactNode;
   shadow?: CardShadow;
   className?: string;

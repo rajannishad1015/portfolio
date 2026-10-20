@@ -1,6 +1,12 @@
+import type { AccentColor } from '../lib/theme';
 import type { IconName } from '../components/icons';
 
-export type AccentColor = 'accent' | 'pop' | 'sun' | 'mint' | 'ink';
+const SOFT_SKILLS = [
+  'Problem-Solving',
+  'Critical Thinking',
+  'Communication',
+  'Attention to Detail',
+] as const;
 
 export const profile = {
   name: 'Rajan Nishad',
@@ -11,12 +17,7 @@ export const profile = {
     'Final-year Data Science student at Kes Shroff College, Mumbai, building end-to-end analytics dashboards, predictive models and full-stack data platforms from raw data to actionable insight.',
   about:
     'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai or remote.',
-  softSkills: [
-    'Problem-Solving',
-    'Critical Thinking',
-    'Communication',
-    'Attention to Detail',
-  ],
+  softSkills: SOFT_SKILLS,
 } as const;
 
 export const links = {
@@ -34,7 +35,7 @@ export const stats = [
   { value: '8', label: 'Certifications earned' },
   { value: '150+', label: 'Global stores served' },
   { value: '20+', label: 'Mumbai localities modelled' },
-] as const;
+] as const satisfies ReadonlyArray<{ value: string; label: string }>;
 
 export const skillGroups = [
   {
@@ -86,12 +87,7 @@ export const skillGroups = [
     title: 'Soft Skills',
     color: 'ink',
     icon: 'users',
-    items: [
-      'Problem-Solving',
-      'Critical Thinking',
-      'Communication',
-      'Attention to Detail',
-    ],
+    items: SOFT_SKILLS,
   },
 ] as const satisfies ReadonlyArray<{
   id: string;
@@ -199,7 +195,7 @@ export const education = [
     id: 'kes-shroff',
     institution: 'Kes Shroff College, Mumbai',
     qualification: 'B.Sc. Data Science',
-    period: '2023 — 2027',
+    period: '2024 — 2027',
     year: '2027',
     detail: 'Expected 2027',
     current: true,
@@ -222,7 +218,15 @@ export const education = [
     detail: '',
     current: false,
   },
-] as const;
+] as const satisfies ReadonlyArray<{
+  id: string;
+  institution: string;
+  qualification: string;
+  period: string;
+  year: string;
+  detail: string;
+  current: boolean;
+}>;
 
 export const certifications = [
   {
@@ -236,21 +240,21 @@ export const certifications = [
     id: 'ibm-ml-python',
     issuer: 'IBM',
     name: 'Machine Learning With Python',
-    initial: 'I',
+    initial: 'ML',
     color: 'accent',
   },
   {
     id: 'ibm-python-ds',
     issuer: 'IBM',
     name: 'Python for Data Science',
-    initial: 'I',
+    initial: 'PY',
     color: 'accent',
   },
   {
     id: 'ibm-ai-dev',
     issuer: 'IBM',
     name: 'AI & Development',
-    initial: 'I',
+    initial: 'AI',
     color: 'accent',
   },
   {
@@ -271,14 +275,14 @@ export const certifications = [
     id: 'oracle-ai-foundations',
     issuer: 'Oracle Cloud Infrastructure',
     name: 'AI Foundations Associate',
-    initial: 'O',
+    initial: 'OA',
     color: 'ink',
   },
   {
     id: 'oracle-data-science',
     issuer: 'Oracle Cloud Infrastructure',
     name: 'Data Science',
-    initial: 'O',
+    initial: 'OD',
     color: 'ink',
   },
 ] as const satisfies ReadonlyArray<{
@@ -295,7 +299,7 @@ export const navLinks = [
   { href: '#projects', label: 'Projects' },
   { href: '#education', label: 'Education' },
   { href: '#contact', label: 'Contact' },
-] as const;
+] as const satisfies ReadonlyArray<{ href: string; label: string }>;
 
 export const sectionIds = [
   'home',

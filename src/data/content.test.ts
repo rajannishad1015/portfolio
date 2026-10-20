@@ -15,7 +15,9 @@ describe('content model', () => {
   it('describes the owner', () => {
     expect(profile.name).toBe('Rajan Nishad');
     expect(profile.roles).toHaveLength(4);
-    expect(profile.roles.every((role) => role.trim().length > 0)).toBe(true);
+    for (const role of profile.roles) {
+      expect(role.trim()).not.toBe('');
+    }
     expect(profile.summary.length).toBeGreaterThan(80);
     expect(profile.about.length).toBeGreaterThan(80);
     expect(profile.availability.length).toBeGreaterThan(0);
@@ -33,7 +35,9 @@ describe('content model', () => {
     expect(skillGroups).toHaveLength(5);
     for (const group of skillGroups) {
       expect(group.items.length).toBeGreaterThan(0);
-      expect(group.items.every((item) => item.trim().length > 0)).toBe(true);
+      for (const item of group.items) {
+        expect(item.trim()).not.toBe('');
+      }
     }
     const flat = skillGroups.flatMap((group) => group.items);
     expect(flat).toContain('Power BI');
@@ -57,7 +61,13 @@ describe('content model', () => {
   it('has three education entries and eight certifications', () => {
     expect(education).toHaveLength(3);
     expect(certifications).toHaveLength(8);
-    expect(certifications.every((cert) => cert.initial.length === 1)).toBe(true);
+    for (const cert of certifications) {
+      expect(cert.initial.length).toBeGreaterThan(0);
+      expect(cert.initial.length).toBeLessThanOrEqual(2);
+    }
+    // Distinct initials, so no two badge tiles render identically.
+    const initials = certifications.map((cert) => cert.initial);
+    expect(new Set(initials).size).toBe(initials.length);
   });
 
   it('has four stats and a nav link per section', () => {
