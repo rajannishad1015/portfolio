@@ -206,7 +206,12 @@
     background-size: 18px 18px;
   }
 
-  .reveal-ready [data-reveal] {
+  /* The hidden state is scoped to the container the reveal hook owns, so a
+     [data-reveal] element that lives outside every hook's container is never
+     left invisible. The scope attribute is only added by JavaScript, so the
+     no-JS fallback is "everything visible". */
+  [data-reveal-scope][data-reveal],
+  [data-reveal-scope] [data-reveal] {
     opacity: 0;
     transform: scale(0.8);
     transition:
@@ -215,7 +220,7 @@
     transition-delay: var(--reveal-delay, 0ms);
   }
 
-  .reveal-ready [data-reveal][data-revealed="true"] {
+  [data-reveal-scope] [data-reveal][data-revealed="true"] {
     opacity: 1;
     transform: scale(1);
   }

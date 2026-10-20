@@ -992,7 +992,12 @@ Expected: FAIL — token strings not found in `src/index.css`.
     background-size: 18px 18px;
   }
 
-  .reveal-ready [data-reveal] {
+  /* The hidden state is scoped to the container the reveal hook owns, so a
+     [data-reveal] element that lives outside every hook's container is never
+     left invisible. The scope attribute is only added by JavaScript, so the
+     no-JS fallback is "everything visible". */
+  [data-reveal-scope][data-reveal],
+  [data-reveal-scope] [data-reveal] {
     opacity: 0;
     transform: scale(0.8);
     transition:
@@ -1001,7 +1006,7 @@ Expected: FAIL — token strings not found in `src/index.css`.
     transition-delay: var(--reveal-delay, 0ms);
   }
 
-  .reveal-ready [data-reveal][data-revealed="true"] {
+  [data-reveal-scope] [data-reveal][data-revealed="true"] {
     opacity: 1;
     transform: scale(1);
   }
@@ -1995,7 +2000,7 @@ git commit -m "feat: add sticker, button and marquee UI primitives"
 - [ ] **Step 1: Write the failing hook tests `src/hooks/useReveal.test.tsx`**
 
 ```tsx
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { MockIntersectionObserver } from '../test/mockIntersectionObserver';
 import { useActiveSection } from './useActiveSection';
@@ -2020,9 +2025,9 @@ function ActiveProbe() {
 }
 
 describe('useReveal', () => {
-  it('marks the document as reveal-ready', () => {
-    render(<Probe />);
-    expect(document.documentElement).toHaveClass('reveal-ready');
+  it('scopes the container so only its own targets are hidden', () => {
+    const { container } = render(<Probe />);
+    expect(container.firstElementChild).toHaveAttribute('data-reveal-scope');
   });
 
   it('reveals only the targets that intersect', () => {
@@ -2034,6 +2039,16 @@ describe('useReveal', () => {
     expect(targets[0]).not.toHaveAttribute('data-revealed');
   });
 
+  it('does not reveal a target that is only barely visible', () => {
+    render(<Probe />);
+    const observer = MockIntersectionObserver.last;
+    const targets = document.querySelectorAll('[data-reveal]');
+    observer.emit([
+      { isIntersecting: true, intersectionRatio: 0.05, target: targets[0] },
+    ]);
+    expect(targets[0]).not.toHaveAttribute('data-revealed');
+  });
+
   it('staggers sibling targets with an increasing delay', () => {
     render(<Probe />);
     const targets = document.querySelectorAll('[data-reveal]');
@@ -2042,6 +2057,24 @@ describe('useReveal', () => {
     expect(delay(0)).toBe('0ms');
     expect(delay(1)).toBe('90ms');
     expect(delay(2)).toBe('180ms');
+  });
+
+  it('uses the configured observer options', () => {
+    render(<Probe />);
+    expect(MockIntersectionObserver.last.rootMargin).toBe('0px 0px -10% 0px');
+    expect(MockIntersectionObserver.last.thresholds).toEqual([0.2]);
+  });
+
+  it('stops observing a target once it has been revealed', () => {
+    render(<Probe />);
+    const observer = MockIntersectionObserver.last;
+    const targets = document.querySelectorAll('[data-reveal]');
+    observer.emit([{ isIntersecting: true, target: targets[0] }]);
+    expect(targets[0]).toHaveAttribute('data-revealed', 'true');
+
+    targets[0].removeAttribute('data-revealed');
+    observer.emit([{ isIntersecting: true, target: targets[0] }]);
+    expect(targets[0]).not.toHaveAttribute('data-revealed');
   });
 
   it('reveals everything when IntersectionObserver is unavailable', () => {
@@ -2066,8 +2099,22 @@ describe('useActiveSection', () => {
 
     render(<ActiveProbe />);
     const observer = MockIntersectionObserver.last;
-    observer.emit([{ isIntersecting: true, target: beta }]);
+    // `act()` is required: React 19 sets IS_REACT_ACT_ENVIRONMENT, so a
+    // setState triggered outside act() is queued and never flushed before the
+    // assertion runs.
+    act(() => {
+      observer.emit([{ isIntersecting: true, target: beta }]);
+    });
     expect(screen.getByTestId('active')).toHaveTextContent('beta');
+  });
+
+  it('uses the configured observer options', () => {
+    const alpha = document.createElement('section');
+    alpha.id = 'alpha';
+    document.body.append(alpha);
+    render(<ActiveProbe />);
+    expect(MockIntersectionObserver.last.rootMargin).toBe('-45% 0px -45% 0px');
+    expect(MockIntersectionObserver.last.thresholds).toEqual([0, 0.25, 0.5]);
   });
 });
 ```
@@ -2080,7 +2127,7 @@ Expected: FAIL — `Failed to resolve import "./useReveal"`.
 - [ ] **Step 3: Write `src/hooks/useReveal.ts`**
 
 ```ts
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 type RevealOptions = {
   threshold?: number;
@@ -2096,13 +2143,18 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
   const { threshold = 0.2, rootMargin = '0px 0px -10% 0px' } = options;
   const ref = useRef<T | null>(null);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: the scope attribute must be on the
+  // element before the browser paints, otherwise the content paints visible
+  // and then fades out before fading back in.
+  useLayoutEffect(() => {
     const container = ref.current;
     if (!container) {
       return;
     }
 
-    document.documentElement.classList.add('reveal-ready');
+    // Scope the hidden state to this container. A [data-reveal] element that
+    // lives outside every hook's container must never be left invisible.
+    container.setAttribute('data-reveal-scope', '');
 
     const descendants = Array.from(
       container.querySelectorAll<HTMLElement>('[data-reveal]'),
@@ -2132,7 +2184,10 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          // isIntersecting is true for any overlap, even a sliver, so the
+          // ratio must be checked too or a barely-visible element is
+          // revealed and unobserved before the reader ever reaches it.
+          if (entry.isIntersecting && entry.intersectionRatio >= threshold) {
             (entry.target as HTMLElement).setAttribute(
               'data-revealed',
               'true',
@@ -2163,14 +2218,20 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
 import { useEffect, useState } from 'react';
 
 export function useActiveSection(ids: readonly string[]) {
-  const [active, setActive] = useState<string>(ids[0] ?? '');
+  // Empty until the observer reports something — no nav item should be
+  // marked as the current section before the reader has scrolled.
+  const [active, setActive] = useState('');
+  // Depending on the joined key rather than the array means the hook is safe
+  // even when a caller passes a freshly-built array on every render.
+  const key = ids.join('|');
 
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') {
       return;
     }
 
-    const elements = ids
+    const list = key ? key.split('|') : [];
+    const elements = list
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null);
 
@@ -2180,12 +2241,17 @@ export function useActiveSection(ids: readonly string[]) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) {
-          setActive(visible[0].target.id);
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length === 0) {
+          return;
         }
+        // The band is the middle strip of the viewport, so the section being
+        // scrolled into is the last one in document order to reach it. Sorting
+        // by intersection ratio instead would favour short sections.
+        const current = visible.reduce((a, b) =>
+          a.boundingClientRect.top > b.boundingClientRect.top ? a : b,
+        );
+        setActive(current.target.id);
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.25, 0.5] },
     );
@@ -2197,7 +2263,7 @@ export function useActiveSection(ids: readonly string[]) {
     return () => {
       observer.disconnect();
     };
-  }, [ids]);
+  }, [key]);
 
   return active;
 }
