@@ -1,4 +1,16 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Scan only the source tree. Without this, Tailwind v4 auto-detects content
+   across the whole project — including the plan and spec markdown — and ships
+   ~29 KB of rules for class names that only ever appear in documentation.
+   `source(none)` switches off that automatic detection, and `@source` paths
+   are resolved relative to this stylesheet, so "./" is the src/ directory. */
+@source "./**/*.{ts,tsx}";
+
+/* Tailwind tree-shakes `@keyframes` declared inside `@theme` unless the
+   matching `animate-*` utility is generated, so safelist the animations to
+   keep their keyframes in the compiled stylesheet. */
+@source inline("animate-wiggle animate-float-y animate-float-x animate-marquee animate-marquee-rev animate-blob animate-confetti animate-role-swap");
 
 @theme {
   /* ---------- Colour ---------- */
@@ -41,7 +53,7 @@
   --animate-marquee-rev: marquee-rev 34s linear infinite;
   --animate-blob: blob 12s ease-in-out infinite;
   --animate-confetti: confetti 12s ease-in-out infinite;
-  --animate-role-swap: role-swap 9.6s ease-in-out both;
+  --animate-role-swap: role-swap 9.6s ease-in-out infinite both;
 
   @keyframes wiggle {
     0%,
@@ -131,17 +143,17 @@
       transform: translateY(0.75rem);
       filter: blur(6px);
     }
-    4% {
+    2% {
       opacity: 1;
       transform: translateY(0);
       filter: blur(0);
     }
-    21% {
+    22% {
       opacity: 1;
       transform: translateY(0);
       filter: blur(0);
     }
-    25%,
+    27%,
     100% {
       opacity: 0;
       transform: translateY(-0.75rem);
@@ -165,7 +177,9 @@
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -223,6 +237,9 @@
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    rotate: none !important;
+    scale: none !important;
+    translate: none !important;
   }
 
   [data-role-word] {
