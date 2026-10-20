@@ -110,6 +110,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
@@ -170,7 +171,7 @@ export default defineConfig({
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["vite/client", "vitest/globals"]
+    "types": ["vite/client", "vitest/globals", "node"]
   },
   "include": ["src", "vite.config.ts"]
 }
@@ -481,11 +482,13 @@ describe('MockIntersectionObserver', () => {
   });
 
   it('tracks instances and throws from last when there are none', () => {
-    MockIntersectionObserver.reset();
-    expect(() => MockIntersectionObserver.last).toThrow();
     new MockIntersectionObserver(() => {});
     expect(MockIntersectionObserver.instances).toHaveLength(1);
     expect(MockIntersectionObserver.last).toBeInstanceOf(MockIntersectionObserver);
+
+    MockIntersectionObserver.reset();
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+    expect(() => MockIntersectionObserver.last).toThrow();
   });
 });
 ```
@@ -519,7 +522,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
     this.root = options?.root ?? null;
     this.rootMargin = options?.rootMargin ?? '0px 0px 0px 0px';
     this.thresholds = Array.isArray(options?.threshold)
-      ? options.threshold
+      ? [...options.threshold]
       : [options?.threshold ?? 0];
     MockIntersectionObserver.instances.push(this);
   }
@@ -571,7 +574,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
   }
 
   static reset(): void {
-    MockIntersectionObserver.instances = [];
+    MockIntersectionObserver.instances.length = 0;
   }
 
   static get last(): MockIntersectionObserver {
@@ -589,7 +592,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
 Run: `npm test`
 Expected: PASS — the new stub tests pass and the existing smoke test still passes.
 
-- [ ] **Step 5: Add a `typecheck` script and Node globals for `vite.config.ts`**
+- [ ] **Step 5: Add a `typecheck` script, Node globals for `vite.config.ts`, and Node type definitions**
 
 In `package.json`, change the scripts block to:
 
@@ -602,6 +605,18 @@ In `package.json`, change the scripts block to:
     "lint": "eslint .",
     "test": "vitest run"
   },
+```
+
+Install Node's type definitions — without them, `tsc` cannot resolve `node:fs` / `node:path` and does not know about `import.meta.dirname`, which Task 2's stylesheet test relies on:
+
+```bash
+npm install -D @types/node
+```
+
+Then in `tsconfig.json`, add `"node"` to the `types` array:
+
+```json
+    "types": ["vite/client", "vitest/globals", "node"]
 ```
 
 In `eslint.config.js`, insert this block **before** the `**/*.{ts,tsx}` block:

@@ -61,10 +61,12 @@ describe('MockIntersectionObserver', () => {
   });
 
   it('tracks instances and throws from last when there are none', () => {
-    MockIntersectionObserver.reset();
-    expect(() => MockIntersectionObserver.last).toThrow();
     new MockIntersectionObserver(() => {});
     expect(MockIntersectionObserver.instances).toHaveLength(1);
     expect(MockIntersectionObserver.last).toBeInstanceOf(MockIntersectionObserver);
+
+    MockIntersectionObserver.reset();
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+    expect(() => MockIntersectionObserver.last).toThrow();
   });
 });

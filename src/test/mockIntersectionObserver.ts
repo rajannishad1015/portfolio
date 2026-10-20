@@ -19,7 +19,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
     this.root = options?.root ?? null;
     this.rootMargin = options?.rootMargin ?? '0px 0px 0px 0px';
     this.thresholds = Array.isArray(options?.threshold)
-      ? options.threshold
+      ? [...options.threshold]
       : [options?.threshold ?? 0];
     MockIntersectionObserver.instances.push(this);
   }
@@ -71,7 +71,7 @@ export class MockIntersectionObserver implements IntersectionObserver {
   }
 
   static reset(): void {
-    MockIntersectionObserver.instances = [];
+    MockIntersectionObserver.instances.length = 0;
   }
 
   static get last(): MockIntersectionObserver {
