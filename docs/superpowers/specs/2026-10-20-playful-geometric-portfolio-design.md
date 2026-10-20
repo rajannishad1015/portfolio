@@ -36,12 +36,12 @@ Success criteria:
 
 | Concern | Choice | Why |
 |---|---|---|
-| Build tool | Vite (latest 7.x) | Fast dev server, zero-config TS, simple static output. |
-| UI | React 19 + TypeScript | Component boundaries match the design system's reusable sticker/button primitives; TS keeps the content model honest. |
+| Build tool | Vite 8.3.x | Fast dev server, zero-config TS, simple static output. Requires Node 20.19+ / 22.12+; this machine runs Node 24.19. |
+| UI | React 19.3 + TypeScript 5.9 | Component boundaries match the design system's reusable sticker/button primitives; TS keeps the content model honest. TypeScript is pinned to 5.9.x because `typescript-eslint` 8.72 declares `typescript >=4.8.4 <6.1.0` and does not yet support TypeScript 7. |
 | Styling | Tailwind CSS v4 via `@tailwindcss/vite` | The design system is expressed in Tailwind token form; v4 `@theme` maps tokens to CSS variables 1:1. |
 | Motion | Pure CSS keyframes + `IntersectionObserver` | The system's motion is specified in CSS terms (`cubic-bezier(0.34,1.56,0.64,1)`, hard shadows, transforms). No animation library needed. |
 | Fonts | `@fontsource/outfit`, `@fontsource/plus-jakarta-sans` | Self-hosted, offline-safe, no FOUT, no third-party request. |
-| Icons | `lucide-react`, stroke-width 2.5 | Matches the specified iconography exactly. |
+| Icons | `lucide-react` 0.562.0, stroke-width 2.5 | Matches the specified iconography exactly. Pinned to 0.562.0 because lucide-react 1.x removed the `Github` and `Linkedin` brand glyphs, which the contact section needs. |
 | Runtime deps | `react`, `react-dom`, `lucide-react` | The icon set is part of the specified iconography, so it ships. No animation or UI library. |
 
 Rejected alternatives:
@@ -90,6 +90,8 @@ Shadows (hard, no blur):
 | Token | Value | Use |
 |---|---|---|
 | `--shadow-pop` | `4px 4px 0 0 #1E293B` | Buttons, primary cards |
+| `--shadow-pop-hover` | `6px 6px 0 0 #1E293B` | Button hover (shadow extends) |
+| `--shadow-pop-active` | `2px 2px 0 0 #1E293B` | Button press (shadow shrinks) |
 | `--shadow-pop-lg` | `8px 8px 0 0 #E2E8F0` | Sticker cards (soft variant) |
 | `--shadow-pop-pink` | `8px 8px 0 0 #F472B6` | Featured project card |
 | `--shadow-pop-mint` | `8px 8px 0 0 #34D399` | Alternate featured variant |
@@ -122,6 +124,10 @@ Textures: dot-grid background (radial-gradient SVG data URI, strictly formed), d
 ## 5. Page structure
 
 One route (`/`), one scrolling document, sections in this order.
+
+**Nav, Hero, About, Skills, Projects, Education, Certifications, Contact, Footer.**
+
+The nav link order (About → Skills → Projects → Education → Contact) matches the page order top to bottom, so the "active section" highlight always agrees with where the reader actually is. Certifications sits between Education and Contact and is reachable by scrolling; it is deliberately left out of the nav bar to keep it to five links.
 
 ### 5.1 Nav
 
@@ -274,9 +280,11 @@ rajan-nishad-portfolio/
 │   ├── data/content.ts
 │   ├── hooks/useReveal.ts
 │   ├── App.tsx  main.tsx  index.css
-├── .gitignore  index.html  package.json  tsconfig.json  tsconfig.node.json
+├── .gitignore  index.html  package.json  tsconfig.json
 ├── eslint.config.js  vite.config.ts  README.md
 ```
+
+A single `tsconfig.json` covers `src/` and `vite.config.ts`; there is no separate `tsconfig.node.json`, and `npm run build` runs `tsc --noEmit` before `vite build`.
 
 ## 11. Verification
 
