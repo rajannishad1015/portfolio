@@ -1006,6 +1006,7 @@ Expected: FAIL — token strings not found in `src/index.css`.
     transition-delay: var(--reveal-delay, 0ms);
   }
 
+  [data-reveal-scope][data-reveal][data-revealed="true"],
   [data-reveal-scope] [data-reveal][data-revealed="true"] {
     opacity: 1;
     transform: scale(1);
