@@ -3,72 +3,52 @@ import { profile } from '../../data/content';
 import { cn } from '../../lib/cn';
 
 /**
- * The hero portrait frame.
+ * The hero portrait element.
  *
- * The portrait itself is deliberately not fabricated: until a real photo is
- * supplied the frame shows a neutral placeholder. To swap it in, put the PNG
- * at `profile.portraitPath` and set `profile.portraitSrc` to that path — the
- * image is then rendered with `object-fit: contain` so nothing is cropped,
- * stretched, or given an artificial background.
- *
- * The frame fills its parent, so the floating cards and notes can be anchored
- * to it rather than to the whole stage.
+ * In the playful geometric collage, the portrait is an illustrated cutout
+ * sitting directly in front of the yellow circle. The head rises above the
+ * circle's top rim for a 3D pop-out sticker effect, with shoulders spanning
+ * across the circle, hugging the right cards naturally.
  */
 export function PortraitFrame({ className = '' }: { className?: string }) {
   const { portraitSrc, portraitAlt } = profile;
 
   return (
-    <>
-      <div
-        className={cn(
-          'absolute inset-0 overflow-hidden border-2 border-ink bg-cream shadow-pop-lg',
-          className,
-        )}
-        style={{
-          borderRadius: '38% 62% 46% 54% / 44% 38% 62% 56%',
-        }}
-      >
-        {portraitSrc ? (
-          <img
-            src={portraitSrc}
-            alt={portraitAlt}
-            width={640}
-            height={800}
-            className="h-full w-full object-contain"
+    <div
+      className={cn(
+        'absolute left-[3%] sm:left-[4%] lg:left-[5%] bottom-0 z-10 w-[74%] sm:w-[72%] lg:w-[70%] h-[95%] pointer-events-none select-none flex items-end justify-center',
+        className,
+      )}
+    >
+      {portraitSrc ? (
+        <img
+          src={portraitSrc}
+          alt={portraitAlt}
+          width={880}
+          height={1201}
+          className="h-full w-full object-contain object-bottom"
+          style={{
+            maskImage:
+              'linear-gradient(to bottom, black 0%, black 70%, rgba(0, 0, 0, 0.85) 78%, rgba(0, 0, 0, 0.5) 86%, rgba(0, 0, 0, 0.2) 93%, transparent 100%)',
+            WebkitMaskImage:
+              'linear-gradient(to bottom, black 0%, black 70%, rgba(0, 0, 0, 0.85) 78%, rgba(0, 0, 0, 0.5) 86%, rgba(0, 0, 0, 0.2) 93%, transparent 100%)',
+          }}
+        />
+      ) : (
+        <div className="grid h-full w-full place-items-center rounded-full border-2 border-ink bg-cream">
+          <ImageOff
+            className="size-11 text-ink/30"
+            strokeWidth={1.75}
+            aria-hidden="true"
           />
-        ) : (
-          <div className="dot-grid grid h-full w-full place-items-center bg-cream">
-            <ImageOff
-              className="size-11 text-ink/30"
-              strokeWidth={1.75}
-              aria-hidden="true"
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Hand-drawn style corner strokes sitting just outside the frame */}
-      <svg
-        className="pointer-events-none absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] text-ink/50"
-        viewBox="0 0 200 250"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <path d="M5 34C5 18 12 7 28 5" />
-        <path d="M172 5c16 2 23 13 23 29" />
-        <path d="M195 216c0 16-7 26-23 29" />
-        <path d="M28 245c-16-3-23-13-23-29" />
-      </svg>
-    </>
+        </div>
+      )}
+    </div>
   );
 }
 
 /**
- * The one instruction that matters, kept below the frame so a floating card
- * can never cover it.
+ * Caption shown only if no portrait source is supplied.
  */
 export function PortraitCaption() {
   const { portraitSrc, portraitPath } = profile;

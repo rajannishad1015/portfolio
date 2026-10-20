@@ -56,27 +56,30 @@ describe('Hero', () => {
     }
   });
 
-  it('shows a replaceable portrait placeholder, not a fabricated photo', () => {
+  it('shows the portrait with meaningful alt text', () => {
     render(<Hero />);
-    expect(screen.getByText(/portrait png goes here/i)).toBeInTheDocument();
-    expect(
-      screen.getByText('/images/rajan-portrait.png'),
-    ).toBeInTheDocument();
-    expect(document.querySelector('img')).toBeNull();
+    const image = screen.getByRole('img');
+    expect(image).toHaveAttribute('src', '/images/rajan-portrait.webp');
+    expect(image.getAttribute('alt') ?? '').toMatch(/rajAN/i);
+  });
+
+  it('does not show the development placeholder once a portrait is set', () => {
+    render(<Hero />);
+    expect(screen.queryByText(/portrait png goes here/i)).toBeNull();
   });
 
   it('floats three skill cards', () => {
     render(<Hero />);
     expect(screen.getByText('Data & Analytics')).toBeInTheDocument();
     expect(screen.getByText('B.Sc. Data Science')).toBeInTheDocument();
-    expect(screen.getByText('SQL & Pipelines')).toBeInTheDocument();
+    expect(screen.getByText('Data Science Aspirant')).toBeInTheDocument();
   });
 
   it('shows the handwritten notes', () => {
     render(<Hero />);
     expect(screen.getByText('Keep Learning')).toBeInTheDocument();
     expect(screen.getByText('Keep Growing')).toBeInTheDocument();
-    expect(screen.getByText('Better Data')).toBeInTheDocument();
-    expect(screen.getByText('Better Decisions')).toBeInTheDocument();
+    expect(screen.getByText('Better Strategies')).toBeInTheDocument();
+    expect(screen.getByText('Brighter Results')).toBeInTheDocument();
   });
 });

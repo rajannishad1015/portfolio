@@ -12,6 +12,7 @@ import {
   Mail,
   Rocket,
   Sparkles,
+  TrendingUp,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -30,6 +31,7 @@ export const ICONS = {
   mail: Mail,
   rocket: Rocket,
   sparkles: Sparkles,
+  trendingUp: TrendingUp,
   users: Users,
 } satisfies Record<string, LucideIcon>;
 

@@ -49,12 +49,17 @@ Each project carries `links.live` and `links.source`. They are currently `"#"`, 
 
 ### The hero portrait
 
-The hero shows a **placeholder frame**, not a stock photo or a generated face. To use a real photo:
+The hero shows an illustrated sticker portrait of you, loaded from `public/images/rajan-portrait.webp` (with a transparent background, so the cream frame and its dot grid show through).
 
-1. Put the PNG at `public/images/rajan-portrait.png`.
-2. In `src/data/content.ts`, set `profile.portraitSrc` to `'/images/rajan-portrait.png'`.
+`rajan.png` in the project root is the raw source. Its "transparency" is actually a grey checkerboard painted into the pixels, so `tools/strip-checkerboard.py` removes it:
 
-The frame renders the image with `object-fit: contain`, so nothing is cropped, stretched or distorted, and a transparent PNG keeps its transparency. `profile.portraitPath` is the path shown in the placeholder, so change it if you use a different filename.
+```bash
+python tools/strip-checkerboard.py rajan.png public/images/rajan-portrait.png
+```
+
+It measures the two checkerboard tones, keeps only the background that touches the image border, makes it transparent, crops to the artwork and writes both a transparent PNG and a WebP. The site loads the WebP (353 KB instead of 1.7 MB).
+
+To swap in a different photo, drop it at `public/images/rajan-portrait.png`, run the same command (or skip it if your photo already has real transparency), and set `profile.portraitSrc` in `src/data/content.ts`. The frame renders the image with `object-fit: contain`, so nothing is cropped, stretched or distorted.
 
 ## Design system
 

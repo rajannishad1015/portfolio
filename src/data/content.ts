@@ -20,13 +20,15 @@ export const profile = {
   introHighlight: 'Data Scientist',
   introAfter: '.',
   /**
-   * The hero portrait is a placeholder until a real photo is supplied.
-   * Drop the PNG at this path and set `portraitSrc` to it — the frame renders
-   * the image with `object-fit: contain` so nothing is cropped or stretched.
+   * The hero portrait. `rajan.png` (the source in the project root) has its
+   * baked-in checkerboard background removed by
+   * `tools/strip-checkerboard.py`, which writes a transparent PNG and a
+   * WebP. The WebP is what the site loads; the PNG is the fallback source.
    */
   portraitPath: '/images/rajan-portrait.png',
-  portraitSrc: null as string | null,
-  portraitAlt: 'Rajan Nishad, Data Science student at Kes Shroff College, Mumbai',
+  portraitSrc: '/images/rajan-portrait.webp',
+  portraitAlt:
+    'Illustrated portrait of Rajan Nishad in a suit giving a thumbs up',
   about:
     'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai.',
   softSkills: SOFT_SKILLS,
@@ -44,11 +46,31 @@ export const heroStats = [
 }>;
 
 export const floatingSkills = [
-  { title: 'Data & Analytics', icon: 'barChart3', tone: 'pop' },
-  { title: 'B.Sc. Data Science', icon: 'graduationCap', tone: 'sun' },
-  { title: 'SQL & Pipelines', icon: 'database', tone: 'accent' },
+  {
+    title: 'Data & Analytics',
+    line1: 'Data &',
+    line2: 'Analytics',
+    icon: 'trendingUp',
+    tone: 'pop',
+  },
+  {
+    title: 'B.Sc. Data Science',
+    line1: 'B.Sc.',
+    line2: 'Data Science',
+    icon: 'graduationCap',
+    tone: 'sun',
+  },
+  {
+    title: 'Data Science Aspirant',
+    line1: 'Data Science',
+    line2: 'Aspirant',
+    icon: 'database',
+    tone: 'accent',
+  },
 ] as const satisfies ReadonlyArray<{
   title: string;
+  line1?: string;
+  line2?: string;
   icon: IconName;
   tone: 'pop' | 'sun' | 'accent';
 }>;
@@ -91,7 +113,7 @@ export const heroNotes = {
     caption: 'A note to self',
   },
   bottom: {
-    lines: ['Better Data', 'Better Decisions'],
+    lines: ['Better Strategies', 'Brighter Results'],
     caption: 'The north star',
   },
 } as const;

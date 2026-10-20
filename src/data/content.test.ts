@@ -18,8 +18,9 @@ describe('content model', () => {
     expect(profile.lastName).toBe('Nishad');
     expect(profile.greeting).toBe("Hello, I'm");
     expect(profile.about.length).toBeGreaterThan(80);
-    expect(profile.portraitSrc).toBeNull();
+    expect(profile.portraitSrc).toBe('/images/rajan-portrait.webp');
     expect(profile.portraitPath).toBe('/images/rajan-portrait.png');
+    expect(profile.portraitAlt.length).toBeGreaterThan(10);
   });
 
   it('exposes working contact links', () => {
