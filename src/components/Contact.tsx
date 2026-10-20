@@ -68,7 +68,7 @@ export function Contact() {
               </CandyLink>
             </div>
 
-            <p className="mt-8 font-mono text-sm text-ink/60">
+            <p className="mt-8 font-mono text-sm text-ink/70">
               {links.email} · {links.phone}
             </p>
           </div>

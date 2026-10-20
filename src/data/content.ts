@@ -10,11 +10,8 @@ const SOFT_SKILLS = [
 
 export const profile = {
   name: 'Rajan Nishad',
-  initials: 'RN',
   firstName: 'Rajan',
   lastName: 'Nishad',
-  roles: ['Data Analyst', 'Data Scientist', 'ML Engineer', 'Full-Stack Builder'],
-  availability: 'Available for Data Analyst / Data Science roles',
   greeting: "Hello, I'm",
   roleLine:
     'Data Science Student | ML & Analytics | Full-Stack Builder',
@@ -30,15 +27,13 @@ export const profile = {
   portraitPath: '/images/rajan-portrait.png',
   portraitSrc: null as string | null,
   portraitAlt: 'Rajan Nishad, Data Science student at Kes Shroff College, Mumbai',
-  summary:
-    'Final-year Data Science student at Kes Shroff College, Mumbai, building end-to-end analytics dashboards, predictive models and full-stack data platforms from raw data to actionable insight.',
   about:
-    'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai or remote.',
+    'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai.',
   softSkills: SOFT_SKILLS,
 } as const;
 
 export const heroStats = [
-  { value: '4', label: 'Shipped Projects', icon: 'barChart3', tone: 'pop' },
+  { value: '4', label: 'Projects', icon: 'barChart3', tone: 'pop' },
   { value: '8', label: 'Certifications', icon: 'lightbulb', tone: 'sun' },
   { value: '90%', label: 'Forecast Accuracy', icon: 'rocket', tone: 'mint' },
 ] as const satisfies ReadonlyArray<{
@@ -185,7 +180,7 @@ export const projects = [
     subtitle: 'Music Distribution Platform',
     featured: true,
     blurb:
-      'End-to-end web platform letting independent artists distribute music to 150+ global stores with zero commission.',
+      'A freelance build for RR Creation — an end-to-end web platform letting independent artists distribute music to 150+ global stores with zero commission.',
     bullets: [
       'Engineered a secure backend on Supabase Auth with a custom Admin Dashboard for release moderation.',
       'Integrated Razorpay with idempotent webhooks for seamless subscriptions and real-time royalty payouts.',
@@ -278,7 +273,7 @@ export const education = [
     qualification: 'B.Sc. Data Science',
     period: '2024 — 2027',
     year: '2027',
-    detail: 'Expected 2027',
+    detail: '',
     current: true,
   },
   {
@@ -390,19 +385,4 @@ export const sectionIds = [
   'education',
   'certifications',
   'contact',
-] as const;
-
-export const marqueeItems = [
-  'Python',
-  'SQL',
-  'Power BI',
-  'Next.js',
-  'Scikit-learn',
-  'FastAPI',
-  'AWS',
-  'Docker',
-  'Supabase',
-  'PostgreSQL',
-  'Pandas',
-  'Java',
 ] as const;

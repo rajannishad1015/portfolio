@@ -10,7 +10,7 @@ type SectionTitleProps = {
 export function SectionTitle({ eyebrow, title, lead, index }: SectionTitleProps) {
   return (
     <div data-reveal className="max-w-2xl">
-      <p className="flex items-center gap-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">
+      <p className="flex items-center gap-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ink/70">
         {index ? <span className="text-accent">{index}</span> : null}
         {eyebrow}
       </p>

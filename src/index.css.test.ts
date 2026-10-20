@@ -9,7 +9,7 @@ describe('design token layer', () => {
     for (const token of [
       '--color-cream: #fffdf5',
       '--color-ink: #1e293b',
-      '--color-accent: #8b5cf6',
+      '--color-accent: #7c3aed',
       '--color-pop: #f472b6',
       '--color-sun: #fbbf24',
       '--color-mint: #34d399',
@@ -43,17 +43,7 @@ describe('design token layer', () => {
   });
 
   it('defines every animation keyframe', () => {
-    for (const keyframe of [
-      'wiggle',
-      'float-y',
-      'float-x',
-      'pop-in',
-      'marquee',
-      'marquee-rev',
-      'blob',
-      'confetti',
-      'role-swap',
-    ]) {
+    for (const keyframe of ['enter-up', 'enter-scale', 'enter-down', 'wiggle']) {
       expect(css).toContain(`@keyframes ${keyframe}`);
     }
   });

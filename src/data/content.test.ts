@@ -14,13 +14,12 @@ import {
 describe('content model', () => {
   it('describes the owner', () => {
     expect(profile.name).toBe('Rajan Nishad');
-    expect(profile.roles).toHaveLength(4);
-    for (const role of profile.roles) {
-      expect(role.trim()).not.toBe('');
-    }
-    expect(profile.summary.length).toBeGreaterThan(80);
+    expect(profile.firstName).toBe('Rajan');
+    expect(profile.lastName).toBe('Nishad');
+    expect(profile.greeting).toBe("Hello, I'm");
     expect(profile.about.length).toBeGreaterThan(80);
-    expect(profile.availability.length).toBeGreaterThan(0);
+    expect(profile.portraitSrc).toBeNull();
+    expect(profile.portraitPath).toBe('/images/rajan-portrait.png');
   });
 
   it('exposes working contact links', () => {
@@ -82,5 +81,4 @@ describe('content model', () => {
     for (const link of navLinks) {
       expect(sectionIds).toContain(link.href.replace('#', ''));
     }
-  });
-});
+  });});

@@ -2,10 +2,16 @@ import { floatingSkills } from '../../data/content';
 import { ICONS } from '../icons';
 import { cn } from '../../lib/cn';
 
-const toneClasses = {
+const cardClasses = {
   pop: 'bg-pop',
   sun: 'bg-sun',
   accent: 'bg-accent',
+} as const;
+
+const titleClasses = {
+  pop: 'text-ink',
+  sun: 'text-ink',
+  accent: 'text-accent-foreground',
 } as const;
 
 const rotations = ['-rotate-3', 'rotate-2', '-rotate-2'] as const;
@@ -31,7 +37,7 @@ export function FloatingSkillCards() {
             key={skill.title}
             className={cn(
               'pointer-events-auto absolute w-[11rem] rounded-[1.25rem] border-2 border-ink p-3 shadow-sticker transition-all duration-300 ease-bounce hover:rotate-0 hover:-translate-y-1.5 hover:shadow-pop-hover lg:w-[13rem]',
-              toneClasses[skill.tone],
+              cardClasses[skill.tone],
               rotations[index % rotations.length],
               positions[index % positions.length],
             )}
@@ -39,7 +45,12 @@ export function FloatingSkillCards() {
             <div className="grid size-9 place-items-center rounded-full border-2 border-ink bg-cream">
               <Icon size={17} strokeWidth={2.5} className="text-ink" aria-hidden="true" />
             </div>
-            <p className="mt-2.5 font-display text-sm font-extrabold leading-tight text-ink">
+            <p
+              className={cn(
+                'mt-2.5 font-display text-sm font-extrabold leading-tight',
+                titleClasses[skill.tone],
+              )}
+            >
               {skill.title}
             </p>
           </div>

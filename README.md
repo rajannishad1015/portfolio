@@ -22,8 +22,9 @@ npm run dev      # http://localhost:5173
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint over the project |
 | `npm test` | Run the Vitest suite once |
-| `npm run audit` | Headless-browser check for horizontal overflow and unrevealed content at 360 / 390 / 768 / 1024 / 1440 px |
+| `npm run audit` | Headless-browser check for horizontal overflow, unrevealed content, a covered portrait caption and a collapsed mobile menu, at 360 / 390 / 768 / 1024 / 1440 px |
 | `npm run shots` | Capture reference screenshots into `shots/` |
+| `npm run og` | Regenerate `public/og-image.png` from the live hero |
 
 `audit` and `shots` drive your locally installed Chrome through `puppeteer-core` — no browser is downloaded. If Chrome is not in a standard location, point `CHROME_PATH` at it. Both expect the site to be served (run `npm run build && npm run preview` first); override the URL with `SITE_URL`.
 
@@ -63,7 +64,7 @@ Tokens live in `src/index.css` under Tailwind v4's `@theme`:
 | --- | --- |
 | `--color-cream` | `#FFFDF5` |
 | `--color-ink` | `#1E293B` |
-| `--color-accent` | `#8B5CF6` |
+| `--color-accent` | `#7C3AED` |
 | `--color-pop` | `#F472B6` |
 | `--color-sun` | `#FBBF24` |
 | `--color-mint` | `#34D399` |
@@ -72,7 +73,9 @@ Tokens live in `src/index.css` under Tailwind v4's `@theme`:
 | `--ease-bounce` | `cubic-bezier(0.34, 1.56, 0.64, 1)` |
 | `--ease-out-soft` | `cubic-bezier(0.22, 1, 0.36, 1)` |
 
-Motion keyframes: `enter-up`, `enter-scale`, `enter-down`, `wiggle`, `float-y`, `float-x`, `pop-in`, `marquee`, `marquee-rev`, `blob`, `confetti`, `role-swap`, `tilt`, `wave`. Every animation is disabled under `prefers-reduced-motion: reduce`, where the entrance delays are also zeroed so nothing is ever left invisible.
+> The accent is `#7C3AED` rather than the system's `#8B5CF6`. The brighter violet only reaches **4.2:1** against the cream page and against white button text, which fails WCAG AA. `#7C3AED` clears AA everywhere (5.6:1 and 5.7:1) and is visually the same violet. Change `--color-accent` in `src/index.css` if you prefer the original.
+
+Motion keyframes: `enter-up`, `enter-scale`, `enter-down`, `wave`, `wiggle`. Every animation is disabled under `prefers-reduced-motion: reduce`, where the entrance delays are also zeroed so nothing is ever left invisible.
 
 ## Deploying
 

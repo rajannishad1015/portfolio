@@ -5,7 +5,7 @@ import { cn } from '../../lib/cn';
 export function SocialLinks() {
   return (
     <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
-      <span className="relative flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.16em] text-ink/55">
+      <span className="relative flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.16em] text-ink/70">
         Connect with me
         <svg
           className="absolute -bottom-3 left-0 h-2.5 w-full text-pop"

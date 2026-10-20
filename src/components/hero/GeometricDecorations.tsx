@@ -30,9 +30,10 @@ export function PortraitDecorations() {
         <path d="M164 24c22 22 30 62 12 92-19 31-64 50-97 36-34-14-53-58-39-90 13-31 52-52 79-50 15 1 33 2 45 12Z" />
       </svg>
 
-      {/* Mint squiggle, left edge of the yellow circle */}
+      {/* Mint squiggle, left edge of the yellow circle. Hidden below the
+          widest layout, where the negative offset would land on the copy. */}
       <svg
-        className="absolute -left-36 top-[30%] h-20 w-28 -rotate-12 text-mint"
+        className="absolute -left-14 top-[30%] hidden h-20 w-28 -rotate-12 text-mint xl:block"
         viewBox="0 0 140 90"
         fill="none"
         stroke="currentColor"

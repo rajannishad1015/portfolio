@@ -44,7 +44,7 @@ describe('Hero', () => {
 
   it('shows the headline stats', () => {
     render(<Hero />);
-    expect(screen.getByText('Shipped Projects')).toBeInTheDocument();
+    expect(screen.getByText('Projects')).toBeInTheDocument();
     expect(screen.getByText('Certifications')).toBeInTheDocument();
     expect(screen.getByText('Forecast Accuracy')).toBeInTheDocument();
   });

@@ -21,9 +21,9 @@ describe('Education', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows the expected graduation year', () => {
+  it('shows the degree period', () => {
     render(<Education />);
-    expect(screen.getByText('Expected 2027')).toBeInTheDocument();
+    expect(screen.getByText('2024 — 2027')).toBeInTheDocument();
   });
 
   it('uses an ordered list for the timeline', () => {

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { CandyButton, CandyLink } from './CandyButton';
 import { DotGrid } from './DotGrid';
-import { Marquee } from './Marquee';
 import { Pill } from './Pill';
 import { SectionTitle } from './SectionTitle';
 import { Squiggle } from './Squiggle';
@@ -113,38 +112,6 @@ describe('SectionTitle', () => {
   });
 });
 
-describe('Marquee', () => {
-  it('duplicates the items so the loop is seamless', () => {
-    render(<Marquee items={['Python', 'SQL']} />);
-    expect(screen.getAllByText('Python')).toHaveLength(2);
-  });
-
-  it('hides the strip from assistive technology', () => {
-    const { container } = render(<Marquee items={['Python']} />);
-    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
-  });
-
-  it('scrolls in reverse when asked', () => {
-    const { container } = render(<Marquee items={['Python']} reverse />);
-    const track = container.querySelector('[aria-hidden="true"]')
-      ?.firstElementChild;
-    expect(track?.className).toContain('animate-marquee-rev');
-  });
-
-  it('uses the slower speed for the reverse track', () => {
-    const { container } = render(<Marquee items={['Python']} reverse />);
-    const track = container.querySelector('[aria-hidden="true"]')
-      ?.firstElementChild;
-    expect(track).toHaveStyle({ animationDuration: '56s' });
-  });
-
-  it('honours an explicit duration', () => {
-    const { container } = render(<Marquee items={['Python']} duration={12} />);
-    const track = container.querySelector('[aria-hidden="true"]')
-      ?.firstElementChild;
-    expect(track).toHaveStyle({ animationDuration: '12s' });
-  });
-});
 
 describe('DotGrid', () => {
   it('renders a decorative panel', () => {

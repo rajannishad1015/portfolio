@@ -62,7 +62,7 @@ Colors (light mode only):
 | `--color-ink` | `#1E293B` | Foreground / dark borders / shadow color |
 | `--color-muted` | `#F1F5F9` | Muted surfaces |
 | `--color-muted-foreground` | `#64748B` | Secondary text |
-| `--color-accent` | `#8B5CF6` | Primary brand / focus ring |
+| `--color-accent` | `#7C3AED` | Primary violet. Darkened from the system's `#8B5CF6`, which only reaches 4.2:1 against the cream page and against white button text and so fails WCAG AA. `#7C3AED` clears AA everywhere and is visually the same violet. | Primary brand / focus ring |
 | `--color-accent-foreground` | `#FFFFFF` | Text on accent |
 | `--color-pop` | `#F472B6` | Hot pink (secondary) |
 | `--color-sun` | `#FBBF24` | Amber (tertiary) |

@@ -6,7 +6,7 @@ import {
 import { HeroContent } from './hero/HeroContent';
 import { HeroNotes } from './hero/HeroNotes';
 import { HeroStats } from './hero/HeroStats';
-import { PortraitPlaceholder } from './hero/PortraitPlaceholder';
+import { PortraitCaption, PortraitFrame } from './hero/PortraitPlaceholder';
 import { SocialLinks } from './hero/SocialLinks';
 
 export function Hero() {
@@ -24,11 +24,14 @@ export function Hero() {
         </div>
 
         {/* Portrait stage */}
-        <div className="animate-enter-scale relative mx-auto w-full max-w-[32rem] pb-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:pb-0">
-          <PortraitDecorations />
-          <PortraitPlaceholder />
-          <FloatingSkillCards />
-          <HeroNotes />
+        <div className="animate-enter-scale relative mx-auto w-full max-w-[32rem] lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <div className="relative aspect-[4/5] w-full">
+            <PortraitDecorations />
+            <PortraitFrame />
+            <FloatingSkillCards />
+            <HeroNotes />
+          </div>
+          <PortraitCaption />
         </div>
 
         {/* Stats and socials */}
