@@ -229,3 +229,9 @@
     translate: none !important;
   }
 }
+
+@media (min-width: 1024px) {
+  body {
+    zoom: 0.8;
+  }
+}
