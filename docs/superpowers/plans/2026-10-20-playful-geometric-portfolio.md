@@ -126,7 +126,12 @@
 }
 ```
 
-- [ ] **Step 2: Write `vite.config.ts`**
+- [ ] **Step 2: Install dependencies**
+
+Run: `npm install`
+Expected: installs cleanly. `@vitejs/plugin-react` may print notes about optional peer dependencies (`oxc-transform-react`, `@rolldown/plugin-babel`, `babel-plugin-react-compiler`) — these are optional and safe to ignore.
+
+- [ ] **Step 3: Write `vite.config.ts`**
 
 ```ts
 import { defineConfig } from 'vitest/config';
@@ -144,7 +149,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3: Write `tsconfig.json`**
+- [ ] **Step 4: Write `tsconfig.json`**
 
 ```json
 {
@@ -170,7 +175,7 @@ export default defineConfig({
 }
 ```
 
-- [ ] **Step 4: Write `eslint.config.js`**
+- [ ] **Step 5: Write `eslint.config.js`**
 
 ```js
 import js from '@eslint/js';
@@ -209,7 +214,7 @@ export default tseslint.config(
 );
 ```
 
-- [ ] **Step 5: Write the test harness files**
+- [ ] **Step 6: Write the test harness files**
 
 `src/test/mockIntersectionObserver.ts`:
 
@@ -282,7 +287,7 @@ afterEach(() => {
 });
 ```
 
-- [ ] **Step 6: Write the failing smoke test `src/App.test.tsx`**
+- [ ] **Step 7: Write the failing smoke test `src/App.test.tsx`**
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -299,12 +304,12 @@ describe('App', () => {
 });
 ```
 
-- [ ] **Step 7: Run the test and confirm it fails**
+- [ ] **Step 8: Run the test and confirm it fails**
 
 Run: `npm test`
 Expected: FAIL — `Cannot find module './App'` / `Failed to resolve import "./App"`.
 
-- [ ] **Step 8: Write the minimal app shell**
+- [ ] **Step 9: Write the minimal app shell**
 
 `src/App.tsx`:
 
@@ -368,15 +373,10 @@ createRoot(container).render(
 </html>
 ```
 
-- [ ] **Step 9: Run the test and confirm it passes**
+- [ ] **Step 10: Run the test and confirm it passes**
 
 Run: `npm test`
 Expected: PASS — 1 test passed.
-
-- [ ] **Step 10: Install dependencies**
-
-Run: `npm install`
-Expected: installs cleanly. `@vitejs/plugin-react` may print notes about optional peer dependencies (`oxc-transform-react`, `@rolldown/plugin-babel`, `babel-plugin-react-compiler`) — these are optional and safe to ignore.
 
 - [ ] **Step 11: Verify the build and lint pass**
 
