@@ -23,9 +23,6 @@ export function HeroContent() {
             </span>
             {profile.greeting}
           </p>
-          <span className="lg:hidden mt-0.5 inline-flex items-center gap-1 font-display text-xs font-bold text-accent">
-            ✦ Data Science & ML Builder
-          </span>
         </div>
       </div>
 
