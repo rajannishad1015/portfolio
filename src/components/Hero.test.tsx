@@ -46,7 +46,7 @@ describe('Hero', () => {
     render(<Hero />);
     expect(screen.getByText('Projects')).toBeInTheDocument();
     expect(screen.getByText('Certifications')).toBeInTheDocument();
-    expect(screen.getByText('Forecast Accuracy')).toBeInTheDocument();
+    expect(screen.getByText('Open to Work')).toBeInTheDocument();
   });
 
   it('offers the social links with accessible names', () => {

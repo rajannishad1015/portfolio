@@ -20,7 +20,7 @@ function ProjectLink({
 }) {
   if (isPlaceholder(url)) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-dashed border-ink/25 px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+      <span className="inline-flex min-h-11 items-center gap-1.5 rounded-full border-2 border-dashed border-ink/25 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground">
         {icon}
         Link coming soon
       </span>
@@ -32,7 +32,7 @@ function ProjectLink({
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-card px-4 py-2 font-display text-sm font-bold shadow-pop transition-all duration-300 ease-bounce hover:-translate-y-[2px] hover:shadow-pop-hover"
+      className="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-ink bg-card px-4 py-2 font-display text-sm font-bold shadow-pop transition-all duration-300 ease-bounce hover:-translate-y-[2px] hover:shadow-pop-hover active:translate-y-[1px]"
     >
       {icon}
       {label}
@@ -116,16 +116,20 @@ function ProjectTags({ tags }: { tags: readonly string[] }) {
 function ProjectLinks({ project }: { project: Project }) {
   return (
     <div className="mt-7 flex flex-wrap gap-3">
-      <ProjectLink
-        url={project.links.live}
-        label="Live"
-        icon={<ExternalLink size={14} strokeWidth={2.5} />}
-      />
-      <ProjectLink
-        url={project.links.source}
-        label="Source"
-        icon={<Github size={14} strokeWidth={2.5} />}
-      />
+      {project.links.live ? (
+        <ProjectLink
+          url={project.links.live}
+          label="Live"
+          icon={<ExternalLink size={14} strokeWidth={2.5} />}
+        />
+      ) : null}
+      {project.links.source ? (
+        <ProjectLink
+          url={project.links.source}
+          label="Source"
+          icon={<Github size={14} strokeWidth={2.5} />}
+        />
+      ) : null}
     </div>
   );
 }
@@ -137,17 +141,17 @@ export function Projects() {
     <section
       id="projects"
       ref={ref}
-      className="relative px-6 py-20 lg:py-24"
+      className="relative px-4 sm:px-6 py-14 sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
           index="03"
           eyebrow="Work"
           title="Selected Projects"
-          lead="Four builds that show the range: a full-stack product, a forecasting dashboard, a desktop ML app and a churn model that changed a business number."
+          lead="Five production builds that show the range: a full-stack platform, survival-based uplift ML, multi-model document intelligence, hybrid recommendation systems, and autonomous telemetry."
         />
 
-        <div className="mt-14 grid gap-8 md:grid-cols-2">
+        <div className="mt-10 sm:mt-14 grid gap-6 sm:gap-8 md:grid-cols-2">
           {projects.map((project) => (
             <StickerCard
               key={project.id}
@@ -157,7 +161,7 @@ export function Projects() {
               className={project.featured ? 'md:col-span-2' : ''}
             >
               {project.featured ? (
-                <div className="grid gap-8 md:grid-cols-[1.5fr_1fr]">
+                <div className="grid gap-6 sm:gap-8 md:grid-cols-[1.5fr_1fr]">
                   <div>
                     <ProjectHeading project={project} />
                     <ProjectBullets bullets={project.bullets} />

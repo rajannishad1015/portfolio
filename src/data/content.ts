@@ -16,7 +16,7 @@ export const profile = {
   roleLine:
     'Data Science Student | ML & Analytics | Full-Stack Builder',
   introBefore:
-    "I'm a final-year Data Science student in Mumbai with a passion for turning messy data into decisions people can act on — predictive models, analytics dashboards and full-stack data platforms. I love strategies that drive real results, and I'm on my way to becoming a ",
+    "I'm a final-year Data Science student at Kes Shroff College, Mumbai, focusing on practical machine learning, exploratory data analysis, and building full-stack applications. I am working towards a career as a ",
   introHighlight: 'Data Scientist',
   introAfter: '.',
   /**
@@ -30,14 +30,14 @@ export const profile = {
   portraitAlt:
     'Illustrated portrait of Rajan Nishad in a suit giving a thumbs up',
   about:
-    'I turn messy data into decisions people can act on. My work spans logistic regression and Scikit-learn models, Power BI dashboards, and full-stack platforms on Next.js and Supabase — and I care about the numbers on the other side: 90% forecast accuracy, 10% churn reduction, 25% faster reporting. Currently completing a B.Sc. in Data Science and open to Data Analyst and Data Science roles in Mumbai.',
+    'I am a final-year B.Sc. Data Science student at Kes Shroff College, Mumbai. My background is in statistics, data analytics, and applied machine learning, combined with hands-on full-stack development skills. I build end-to-end projects using Python (Scikit-learn, Pandas, NumPy), SQL databases, and web frameworks like FastAPI and Next.js. I focus on writing clean, modular code and solving real practical problems with data. I am actively seeking internship and entry-level Data Analyst or Junior Data Scientist opportunities in Mumbai.',
   softSkills: SOFT_SKILLS,
 } as const;
 
 export const heroStats = [
-  { value: '4', label: 'Projects', icon: 'barChart3', tone: 'pop' },
+  { value: '30+', label: 'Projects', icon: 'barChart3', tone: 'pop' },
   { value: '8', label: 'Certifications', icon: 'lightbulb', tone: 'sun' },
-  { value: '90%', label: 'Forecast Accuracy', icon: 'rocket', tone: 'mint' },
+  { value: 'Mumbai', label: 'Open to Work', icon: 'globe', tone: 'mint' },
 ] as const satisfies ReadonlyArray<{
   value: string;
   label: string;
@@ -129,10 +129,10 @@ export const links = {
 } as const;
 
 export const stats = [
-  { value: '4', label: 'Shipped projects' },
-  { value: '8', label: 'Certifications earned' },
-  { value: '150+', label: 'Global stores served' },
-  { value: '20+', label: 'Mumbai localities modelled' },
+  { value: '30+', label: 'Projects Built' },
+  { value: '8', label: 'Certifications' },
+  { value: 'B.Sc.', label: 'Data Science' },
+  { value: '2027', label: 'Graduation Year' },
 ] as const satisfies ReadonlyArray<{ value: string; label: string }>;
 
 export const skillGroups = [
@@ -160,11 +160,13 @@ export const skillGroups = [
       'Pandas',
       'NumPy',
       'Scikit-learn',
+      'PyTorch',
       'FastAPI',
-      'Java',
-      'C++',
+      'TypeScript',
       'JavaScript',
       'Next.js',
+      'Java',
+      'C++',
     ],
   },
   {
@@ -213,68 +215,99 @@ export const projects = [
       { value: '0%', label: 'commission' },
     ],
     tags: ['Next.js', 'Node.js', 'Supabase', 'Razorpay'],
-    // TODO: replace with the real live and source URLs
-    links: { live: '#', source: '#' },
+    links: {
+      live: 'https://www.swaradigital.in/',
+      source: '',
+    },
   },
   {
-    id: 'sales-forecasting',
-    title: 'Sales Analysis & Forecasting Dashboard',
-    subtitle: 'Power BI',
+    id: 'retention-iq',
+    title: 'RetentionIQ',
+    subtitle: 'Survival Analysis & Uplift ML',
     featured: false,
     blurb:
-      'A predictive Power BI dashboard built on three years of historical sales data, used to automate monthly trend analysis.',
+      'A production capstone replacing binary churn classifiers with multi-horizon survival analysis (S(t)), causal uplift modeling (X-Learner), and net ROI treatment ranking.',
     bullets: [
-      'Modelled over three years of historical sales data into an interactive Power BI report.',
-      'Improved decision-making for the marketing team with a forecast reaching 90% accuracy.',
-      'Automated monthly sales trend analysis, lifting reporting efficiency by 25%.',
+      'Modelled customer survival curves across dynamic time horizons using Cox Proportional Hazards and XGBoost.',
+      'Implemented causal uplift modeling with X-Learner to rank retention treatments by net economic ROI.',
+      'Deployed an interactive decision dashboard in Streamlit backed by a high-throughput FastAPI prediction service.',
     ],
     metrics: [
-      { value: '90%', label: 'forecast accuracy' },
-      { value: '25%', label: 'more efficient reporting' },
+      { value: '17', label: 'unit tests passed' },
+      { value: 'Net ROI', label: 'treatment ranking' },
     ],
-    tags: ['Power BI', 'Excel', 'Data Modelling'],
-    // TODO: replace with the real live and source URLs
-    links: { live: '#', source: '#' },
+    tags: ['Python', 'FastAPI', 'Streamlit', 'XGBoost', 'Survival Analysis', 'Scikit-learn'],
+    links: {
+      live: '#',
+      source:
+        'https://github.com/rajannishad1015/Survival-Based-Churn-Modeling-with-Personalized-Retention-Treatment-Ranking',
+    },
   },
   {
-    id: 'house-price-predictor',
-    title: 'Mumbai House Price Predictor',
-    subtitle: 'Java Swing + Python',
+    id: 'docucat-ai',
+    title: 'DocuCat AI',
+    subtitle: 'Multi-Model Document Intelligence',
     featured: false,
     blurb:
-      'A hybrid desktop app with a Java Swing GUI talking to a Python ML backend to predict Mumbai house prices.',
+      'An intelligent multi-model document categorization, extraction & benchmarking platform covering 12 distinct document categories.',
     bullets: [
-      'Trained a Scikit-learn regression model on a cleaned Mumbai housing dataset.',
-      'Applied OOP principles across modular Java panels — Prediction, Data and Chart — extending a shared BasePanel.',
-      'Rendered charts and locality-wise price distributions from the Python backend across 20+ localities.',
+      'Engineered a multi-model pipeline leveraging PyTorch and Hugging Face Transformers for fine-grained document classification.',
+      'Designed an automated metadata and entity extraction pipeline for invoices, legal agreements, and reports.',
+      'Built an interactive web dashboard with FastAPI backend and client-side telemetry for real-time model benchmarking.',
     ],
     metrics: [
-      { value: '20+', label: 'localities covered' },
-      { value: '3', label: 'Java panels' },
+      { value: '12', label: 'document classes' },
+      { value: 'PyTorch', label: 'deep learning pipeline' },
     ],
-    tags: ['Java', 'Swing', 'Python', 'Scikit-learn', 'Pandas'],
-    // TODO: replace with the real live and source URLs
-    links: { live: '#', source: '#' },
+    tags: ['Python', 'PyTorch', 'Transformers', 'FastAPI', 'NLP', 'Scikit-learn'],
+    links: {
+      live: '#',
+      source: 'https://github.com/rajannishad1015/intelligent-document-categorization',
+    },
   },
   {
-    id: 'churn-model',
-    title: 'Churn Prediction Model',
-    subtitle: 'Python + Power BI',
+    id: 'ecommerce-recommender',
+    title: 'E-Commerce Recommendation Engine',
+    subtitle: 'Machine Learning & Hybrid Filtering',
     featured: false,
     blurb:
-      'A logistic regression model that predicts subscription churn and feeds a Power BI dashboard for retention decisions.',
+      'An end-to-end intelligent recommendation and semantic discovery platform processing catalog data, user behavior, and natural language search queries in real time.',
     bullets: [
-      'Designed and implemented a logistic regression model in Python to predict customer churn.',
-      'Reached 85% prediction accuracy, enabling proactive retention strategies.',
-      'Reduced churn by 10% over six months and presented findings through a Power BI dashboard.',
+      'Built an NLP query engine parsing natural language intent, category, brand, and numerical price constraints.',
+      'Engineered hybrid recommendations combining TF-IDF cosine similarity with collaborative filtering algorithms.',
+      'Integrated a production FastAPI backend with PostgreSQL and Dockerized services, verified with 18 automated unit tests.',
     ],
     metrics: [
-      { value: '85%', label: 'prediction accuracy' },
-      { value: '10%', label: 'churn reduction' },
+      { value: '18', label: 'tests passed (100%)' },
+      { value: 'Hybrid', label: 'filtering architecture' },
     ],
-    tags: ['Python', 'Scikit-learn', 'Power BI'],
-    // TODO: replace with the real live and source URLs
-    links: { live: '#', source: '#' },
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'Scikit-learn', 'NLP', 'Docker'],
+    links: {
+      live: '#',
+      source: 'https://github.com/rajannishad1015/ECommerce-Recommendation-Systen',
+    },
+  },
+  {
+    id: 'marg-autonomous-routing',
+    title: 'MARG: Adaptive Route Generation',
+    subtitle: 'Autonomous Perception & Telemetry',
+    featured: false,
+    blurb:
+      'Autonomous perception, quantitative risk telemetry, and adaptive route planning system engineered for complex and unstructured traffic environments.',
+    bullets: [
+      'Integrated real-time computer vision perception using TensorFlow.js COCO-SSD for multi-obstacle detection.',
+      'Architected telemetry risk scoring and route optimization simulated in MATLAB & Simulink Stateflow.',
+      'Engineered around ISO 26262 / ASIL-D functional safety specifications for autonomous vehicle path navigation.',
+    ],
+    metrics: [
+      { value: 'ASIL-D', label: 'safety architecture' },
+      { value: 'Real-Time', label: 'vision perception' },
+    ],
+    tags: ['Python', 'TensorFlow.js', 'MATLAB', 'Simulink', 'Computer Vision'],
+    links: {
+      live: '#',
+      source: 'https://github.com/rajannishad1015/Multi-Modal-Adaptive-Route-Generation',
+    },
   },
 ] as const satisfies ReadonlyArray<{
   id: string;
@@ -285,7 +318,7 @@ export const projects = [
   bullets: readonly string[];
   metrics: ReadonlyArray<{ value: string; label: string }>;
   tags: readonly string[];
-  links: { live: string; source: string };
+  links: { live: string; source?: string };
 }>;
 
 export const education = [
@@ -295,8 +328,16 @@ export const education = [
     qualification: 'B.Sc. Data Science',
     period: '2024 — 2027',
     year: '2027',
-    detail: '',
+    detail: 'Specializing in Applied Machine Learning, Statistical Analysis & Data Systems',
     current: true,
+    coursework: [
+      'Machine Learning',
+      'Statistical Methods & Probability',
+      'Python & R Programming',
+      'Database Management (SQL)',
+      'Data Structures & Algorithms',
+      'Data Visualization',
+    ],
   },
   {
     id: 'hsc',
@@ -304,8 +345,9 @@ export const education = [
     qualification: 'Higher Secondary Certificate',
     period: '2024',
     year: '2024',
-    detail: '',
+    detail: 'Science Stream with Mathematics & Computer Science',
     current: false,
+    coursework: ['Mathematics', 'Computer Science', 'Physics', 'Chemistry'],
   },
   {
     id: 'ssc',
@@ -313,8 +355,9 @@ export const education = [
     qualification: 'Secondary School Certificate',
     period: '2022',
     year: '2022',
-    detail: '',
+    detail: 'Foundational Science & Mathematics',
     current: false,
+    coursework: ['Mathematics', 'Science', 'Information Technology'],
   },
 ] as const satisfies ReadonlyArray<{
   id: string;
@@ -324,6 +367,7 @@ export const education = [
   year: string;
   detail: string;
   current: boolean;
+  coursework?: readonly string[];
 }>;
 
 export const certifications = [
@@ -333,6 +377,8 @@ export const certifications = [
     name: 'Data Analytics Professional Certificate',
     initial: 'G',
     color: 'sun',
+    category: 'Analytics & SQL',
+    skills: ['SQL', 'R', 'Tableau', 'Spreadsheets'],
   },
   {
     id: 'ibm-ml-python',
@@ -340,6 +386,8 @@ export const certifications = [
     name: 'Machine Learning With Python',
     initial: 'ML',
     color: 'accent',
+    category: 'Machine Learning',
+    skills: ['Scikit-learn', 'Regression', 'Classification'],
   },
   {
     id: 'ibm-python-ds',
@@ -347,6 +395,8 @@ export const certifications = [
     name: 'Python for Data Science',
     initial: 'PY',
     color: 'accent',
+    category: 'Data Science',
+    skills: ['Python', 'Pandas', 'NumPy'],
   },
   {
     id: 'ibm-ai-dev',
@@ -354,6 +404,8 @@ export const certifications = [
     name: 'AI & Development',
     initial: 'AI',
     color: 'accent',
+    category: 'AI Engineering',
+    skills: ['Artificial Intelligence', 'APIs', 'Generative AI'],
   },
   {
     id: 'harvard-cs50-ai',
@@ -361,6 +413,8 @@ export const certifications = [
     name: "CS50's Introduction to AI",
     initial: 'H',
     color: 'pop',
+    category: 'Computer Science & AI',
+    skills: ['Neural Networks', 'NLP', 'Search Algorithms'],
   },
   {
     id: 'columbia-prompt',
@@ -368,6 +422,8 @@ export const certifications = [
     name: 'Prompt Engineering',
     initial: 'C',
     color: 'mint',
+    category: 'GenAI & LLMs',
+    skills: ['LLM Architecture', 'Context Framing', 'Few-Shot'],
   },
   {
     id: 'oracle-ai-foundations',
@@ -375,6 +431,8 @@ export const certifications = [
     name: 'AI Foundations Associate',
     initial: 'OA',
     color: 'ink',
+    category: 'Cloud AI',
+    skills: ['OCI AI Services', 'Machine Learning', 'Cloud Infra'],
   },
   {
     id: 'oracle-data-science',
@@ -382,6 +440,8 @@ export const certifications = [
     name: 'Data Science',
     initial: 'OD',
     color: 'ink',
+    category: 'Cloud Data Science',
+    skills: ['Model Pipelines', 'OCI Data Science', 'Deployment'],
   },
 ] as const satisfies ReadonlyArray<{
   id: string;
@@ -389,6 +449,8 @@ export const certifications = [
   name: string;
   initial: string;
   color: AccentColor;
+  category?: string;
+  skills?: readonly string[];
 }>;
 
 export const navLinks = [

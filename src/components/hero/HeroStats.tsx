@@ -10,31 +10,31 @@ const toneClasses = {
 
 export function HeroStats() {
   return (
-    <dl className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-3">
+    <dl className="grid grid-cols-3 gap-2 sm:gap-x-6">
       {heroStats.map((stat, index) => {
         const Icon = ICONS[stat.icon];
         return (
           <div
             key={stat.label}
             className={cn(
-              'flex items-center gap-3',
+              'flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3.5 rounded-xl sm:rounded-none border-2 sm:border-0 border-ink bg-card sm:bg-transparent p-2 sm:p-0 shadow-[2.5px_2.5px_0px_#18181b] sm:shadow-none',
               index > 0 && 'sm:border-l sm:border-ink/15 sm:pl-6',
             )}
           >
             <span
               className={cn(
-                'grid size-14 shrink-0 place-items-center rounded-full border-2 border-ink',
+                'grid size-9 sm:size-14 shrink-0 place-items-center rounded-full border-2 border-ink',
                 toneClasses[stat.tone],
               )}
               aria-hidden="true"
             >
-              <Icon size={22} strokeWidth={2.5} className="text-ink" />
+              <Icon size={16} strokeWidth={2.5} className="text-ink sm:size-[22px]" />
             </span>
-            <span>
-              <span className="block font-display text-2xl font-extrabold leading-none text-ink">
+            <span className="min-w-0 w-full">
+              <span className="block font-display text-sm sm:text-2xl font-extrabold leading-none text-ink truncate">
                 {stat.value}
               </span>
-              <span className="mt-1.5 block text-sm font-medium text-muted-foreground">
+              <span className="mt-0.5 sm:mt-1 block text-[10px] sm:text-sm font-medium text-muted-foreground leading-tight truncate">
                 {stat.label}
               </span>
             </span>

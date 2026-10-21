@@ -48,28 +48,43 @@ export function Nav() {
   const menu = open ? (
     <div
       id="mobile-menu"
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-cream lg:hidden"
+      className="fixed inset-0 z-[60] flex flex-col justify-between overflow-y-auto bg-cream p-6 lg:hidden"
     >
-      <nav aria-label="Mobile" className="flex flex-col items-center gap-5">
+      <div className="flex items-center justify-between">
+        <BrandLogo />
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          className="grid size-11 place-items-center rounded-full border-2 border-ink bg-card shadow-pop"
+        >
+          <X size={20} strokeWidth={2.5} />
+        </button>
+      </div>
+
+      <nav aria-label="Mobile" className="my-auto flex flex-col items-center gap-4 py-6">
         {NAV_ITEMS.map((link) => (
           <a
             key={link.href}
             href={link.href}
             onClick={() => setOpen(false)}
-            className="font-display text-4xl font-extrabold text-ink transition-colors duration-300 hover:text-accent"
+            className="font-display text-2xl sm:text-3xl font-extrabold text-ink transition-colors duration-300 hover:text-accent"
           >
             {link.label}
           </a>
         ))}
       </nav>
-      <button
-        type="button"
-        aria-label="Close menu"
-        onClick={() => setOpen(false)}
-        className="absolute right-6 top-6 grid size-11 place-items-center rounded-full border-2 border-ink bg-card shadow-pop"
-      >
-        <X size={20} strokeWidth={2.5} />
-      </button>
+
+      <div className="pt-4 border-t-2 border-ink/10">
+        <a
+          href="#contact"
+          onClick={() => setOpen(false)}
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-accent px-5 font-display text-sm font-bold text-accent-foreground shadow-pop active:translate-x-[2px] active:translate-y-[2px]"
+        >
+          Let&apos;s Connect
+          <ArrowRight size={15} strokeWidth={2.5} />
+        </a>
+      </div>
     </div>
   ) : null;
 
@@ -80,7 +95,7 @@ export function Nav() {
         scrolled ? 'bg-cream/90 shadow-pop backdrop-blur' : 'bg-transparent',
       )}
     >
-      <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-6 px-6 py-4">
+      <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
         <a
           href="#home"
           aria-label="Rajan Nishad — back to top"

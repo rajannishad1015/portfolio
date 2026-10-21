@@ -45,8 +45,8 @@ describe('content model', () => {
     expect(flat).toContain('SQL Server');
   });
 
-  it('has four projects, the first of which is featured', () => {
-    expect(projects).toHaveLength(4);
+  it('has five projects, the first of which is featured', () => {
+    expect(projects).toHaveLength(5);
     expect(projects.filter((project) => project.featured)).toHaveLength(1);
     expect(projects[0].featured).toBe(true);
     for (const project of projects) {

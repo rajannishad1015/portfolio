@@ -13,11 +13,11 @@ export function HeroNotes() {
   return (
     <>
       {/* Top-right note — ink handwriting with tick marks and doodle curve */}
-      <div className="pointer-events-none absolute right-[4%] sm:right-[5%] lg:right-[6%] top-[3%] sm:top-[2.5%] lg:top-[2%] z-20 select-none">
-        <div className="relative font-hand font-bold text-xl sm:text-2xl lg:text-[1.8rem] leading-[0.94] text-ink -rotate-3">
+      <div className="pointer-events-none absolute right-[3%] sm:right-[5%] lg:right-[6%] top-[2%] sm:top-[2.5%] lg:top-[2%] z-20 select-none">
+        <div className="relative font-hand font-bold text-xs sm:text-2xl lg:text-[1.8rem] leading-[0.94] text-ink -rotate-3">
           {/* Two small tick marks above Keep */}
           <svg
-            className="absolute -top-4 left-1.5 w-5 h-4 text-ink"
+            className="absolute -top-3 sm:-top-4 left-1 sm:left-1.5 w-3.5 sm:w-5 h-3 sm:h-4 text-ink"
             viewBox="0 0 20 16"
             fill="none"
             stroke="currentColor"
@@ -30,7 +30,7 @@ export function HeroNotes() {
 
           {/* Curved doodle accent on left */}
           <svg
-            className="absolute top-1 -left-3.5 w-3.5 h-11 text-ink/80"
+            className="absolute top-0.5 sm:top-1 -left-2.5 sm:-left-3.5 w-2.5 sm:w-3.5 h-8 sm:h-11 text-ink/80"
             viewBox="0 0 12 36"
             fill="none"
             stroke="currentColor"
@@ -43,7 +43,7 @@ export function HeroNotes() {
 
           {/* Sparkle star */}
           <span
-            className="absolute -top-1.5 -right-4 text-sun text-sm select-none"
+            className="absolute -top-1 sm:-top-1.5 -right-3 sm:-right-4 text-sun text-xs sm:text-sm select-none"
             aria-hidden="true"
           >
             ✦
@@ -66,7 +66,7 @@ export function HeroNotes() {
 
           {/* Small curved arrow */}
           <svg
-            className="absolute -bottom-5 right-2 w-7 h-7 text-ink/80"
+            className="absolute -bottom-3.5 sm:-bottom-5 right-1 sm:right-2 w-5 sm:w-7 h-5 sm:h-7 text-ink/80"
             viewBox="0 0 28 28"
             fill="none"
             stroke="currentColor"
@@ -82,7 +82,7 @@ export function HeroNotes() {
 
       {/* Dashed curved doodle arrow connecting cards to the mint note */}
       <svg
-        className="pointer-events-none absolute right-[15%] sm:right-[16%] lg:right-[17%] top-[65%] sm:top-[64%] lg:top-[63%] z-10 w-14 h-16 sm:w-16 sm:h-20 text-ink/80 select-none"
+        className="pointer-events-none absolute right-[14%] sm:right-[16%] lg:right-[17%] top-[65%] sm:top-[64%] lg:top-[63%] z-10 w-9 h-11 sm:w-16 sm:h-20 text-ink/80 select-none"
         viewBox="0 0 60 70"
         fill="none"
         stroke="currentColor"
@@ -99,9 +99,9 @@ export function HeroNotes() {
 
       {/* Mint sticker card — tilted with bold neo-brutalist shadow */}
       <div
-        className="absolute right-[2%] sm:right-[3%] lg:right-[4%] bottom-[5%] sm:bottom-[6%] lg:bottom-[7%] z-20 w-[155px] sm:w-[176px] lg:w-[196px] -rotate-[5deg] rounded-2xl border-2 sm:border-[2.5px] border-ink bg-[#38ef7d] p-3.5 sm:p-4 shadow-[4px_4px_0px_#18181b] sm:shadow-[5px_5px_0px_#18181b] transition-all duration-300 ease-bounce hover:rotate-0 hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181b] cursor-pointer select-none"
+        className="absolute right-[2%] sm:right-[3%] lg:right-[4%] bottom-[5%] sm:bottom-[6%] lg:bottom-[7%] z-20 w-[108px] sm:w-[176px] lg:w-[196px] -rotate-[5deg] rounded-xl sm:rounded-2xl border-2 sm:border-[2.5px] border-ink bg-[#38ef7d] p-1.5 sm:p-4 shadow-[2.5px_2.5px_0px_#18181b] sm:shadow-[5px_5px_0px_#18181b] transition-all duration-300 ease-bounce hover:rotate-0 hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181b] cursor-pointer select-none"
       >
-        <div className="font-hand font-bold text-base sm:text-lg lg:text-[1.4rem] leading-[0.98] text-ink text-center">
+        <div className="font-hand font-bold text-[11px] sm:text-lg lg:text-[1.4rem] leading-[0.98] text-ink text-center">
           {heroNotes.bottom.lines.map((line) => (
             <span key={line} className="sr-only">
               {line}
@@ -122,7 +122,7 @@ export function HeroNotes() {
         aria-hidden="true"
       >
         <svg
-          className="w-24 h-7 sm:w-28 sm:h-9 text-[#f59e0b] -rotate-[4deg]"
+          className="w-14 h-4 sm:w-28 sm:h-9 text-[#f59e0b] -rotate-[4deg]"
           viewBox="0 0 100 28"
           fill="none"
           stroke="currentColor"

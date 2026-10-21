@@ -10,10 +10,10 @@ describe('About', () => {
 
   it('shows the four stat tiles', () => {
     render(<About />);
-    expect(screen.getByText('Shipped projects')).toBeInTheDocument();
-    expect(screen.getByText('Certifications earned')).toBeInTheDocument();
-    expect(screen.getByText('150+')).toBeInTheDocument();
-    expect(screen.getByText('20+')).toBeInTheDocument();
+    expect(screen.getByText('Projects Built')).toBeInTheDocument();
+    expect(screen.getByText('Certifications')).toBeInTheDocument();
+    expect(screen.getByText('B.Sc.')).toBeInTheDocument();
+    expect(screen.getByText('2027')).toBeInTheDocument();
   });
 
   it('lists the soft skills', () => {

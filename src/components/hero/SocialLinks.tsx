@@ -4,7 +4,7 @@ import { cn } from '../../lib/cn';
 
 export function SocialLinks() {
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 sm:gap-x-5 sm:gap-y-4">
       <span className="relative flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.16em] text-ink/70">
         Connect with me
         <svg
@@ -35,10 +35,10 @@ export function SocialLinks() {
                 : {})}
               aria-label={social.label}
               className={cn(
-                'grid size-12 place-items-center rounded-full border-2 border-ink bg-cream text-ink transition-all duration-300 ease-bounce hover:-translate-y-1 hover:rotate-6 hover:bg-sun',
+                'grid size-11 sm:size-12 place-items-center rounded-full border-2 border-ink bg-cream text-ink transition-all duration-300 ease-bounce hover:-translate-y-1 hover:rotate-6 hover:bg-sun',
               )}
             >
-              <Icon size={19} strokeWidth={2.5} aria-hidden="true" />
+              <Icon size={18} strokeWidth={2.5} className="sm:size-[19px]" aria-hidden="true" />
             </a>
           );
         })}

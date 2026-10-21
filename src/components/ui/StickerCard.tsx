@@ -40,7 +40,7 @@ export function StickerCard({
   return (
     <article
       className={cn(
-        'relative rounded-xl border-2 border-ink bg-card p-6 pt-9 transition-all duration-300 ease-out-soft hover:-translate-y-[3px]',
+        'relative rounded-2xl border-2 border-ink bg-card p-5 pt-8 sm:p-6 sm:pt-9 transition-all duration-300 ease-out-soft hover:-translate-y-[3px]',
         shadowClasses[shadow],
         className,
       )}

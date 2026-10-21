@@ -1,8 +1,100 @@
+import {
+  BarChart3,
+  Code2,
+  Cpu,
+  Database,
+  Globe,
+  Layers,
+  Sparkles,
+} from 'lucide-react';
 import { skillGroups } from '../data/content';
 import { useReveal } from '../hooks/useReveal';
+import { cn } from '../lib/cn';
 import { ICONS } from './icons';
 import { SectionTitle } from './ui/SectionTitle';
 import { StickerCard } from './ui/StickerCard';
+
+const DAILY_DRIVERS = [
+  {
+    name: 'Python',
+    role: 'ML & Data Pipelines',
+    desc: 'Pandas, NumPy, Scikit-learn & PyTorch for model development and analytics.',
+    icon: Code2,
+    bg: 'bg-pop/10 border-pop text-pop',
+    shadow: 'hover:shadow-pop-pink',
+  },
+  {
+    name: 'SQL & Databases',
+    role: 'Queries & Data Extraction',
+    desc: 'Complex queries, aggregations, window functions & relational database design.',
+    icon: Database,
+    bg: 'bg-sun/20 border-sun text-amber-600',
+    shadow: 'hover:shadow-pop-sun',
+  },
+  {
+    name: 'FastAPI',
+    role: 'Inference & Backend APIs',
+    desc: 'Deploying high-throughput REST APIs and asynchronous prediction endpoints.',
+    icon: Cpu,
+    bg: 'bg-mint/25 border-mint text-emerald-600',
+    shadow: 'hover:shadow-pop-mint',
+  },
+  {
+    name: 'Next.js & React',
+    role: 'Full-Stack UI Development',
+    desc: 'Building responsive data platforms, dashboards, and client-facing web tools.',
+    icon: Globe,
+    bg: 'bg-accent/15 border-accent text-accent',
+    shadow: 'hover:shadow-pop',
+  },
+  {
+    name: 'Power BI & Excel',
+    role: 'Reporting & Visualization',
+    desc: 'Interactive business intelligence reports, automated KPIs & exploratory analysis.',
+    icon: BarChart3,
+    bg: 'bg-pop/10 border-pop text-pop',
+    shadow: 'hover:shadow-pop-pink',
+  },
+  {
+    name: 'Git & Docker',
+    role: 'DevOps & Reproducibility',
+    desc: 'Version control, reproducible environments, containerization & CI workflows.',
+    icon: Layers,
+    bg: 'bg-cream border-ink text-ink',
+    shadow: 'hover:shadow-pop',
+  },
+] as const;
+
+const GROUP_DESCRIPTIONS: Record<string, string> = {
+  'data-viz': 'Exploratory charts, reporting dashboards, and visual storytelling.',
+  databases: 'Relational data modeling, querying, and persistent storage.',
+  programming: 'Languages, machine learning libraries, and API frameworks.',
+  cloud: 'Containerized deployment, version control, and cloud environments.',
+  soft: 'Critical thinking, communication, and systematic problem solving.',
+};
+
+const PILL_STYLES = {
+  accent: {
+    pill: 'bg-accent/10 border-ink hover:bg-accent/20',
+    dot: 'bg-accent',
+  },
+  pop: {
+    pill: 'bg-pop/15 border-ink hover:bg-pop/25',
+    dot: 'bg-pop',
+  },
+  sun: {
+    pill: 'bg-sun/20 border-ink hover:bg-sun/30',
+    dot: 'bg-amber-500',
+  },
+  mint: {
+    pill: 'bg-mint/25 border-ink hover:bg-mint/35',
+    dot: 'bg-emerald-500',
+  },
+  ink: {
+    pill: 'bg-cream border-ink hover:bg-sand',
+    dot: 'bg-ink',
+  },
+} as const;
 
 export function Skills() {
   const ref = useReveal<HTMLElement>();
@@ -11,36 +103,87 @@ export function Skills() {
     <section
       id="skills"
       ref={ref}
-      className="relative bg-sand px-6 py-20 lg:py-24"
+      className="relative bg-sand px-4 sm:px-6 py-14 sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <SectionTitle
           index="02"
-        eyebrow="Toolkit"
+          eyebrow="Toolkit"
           title="Skills & Stack"
-          lead="The tools I reach for, from the first exploratory chart to the API in front of it."
+          lead="The technologies, libraries, and frameworks I use to analyze data, build predictive models, and deploy reliable software."
         />
 
+        {/* Daily Drivers Spotlight */}
+        <div className="mt-10 sm:mt-12">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="grid size-7 place-items-center rounded-lg border-2 border-ink bg-sun text-ink shadow-sm">
+                <Sparkles size={15} strokeWidth={2.5} />
+              </span>
+              <h3 className="font-display text-sm font-extrabold uppercase tracking-wider text-ink">
+                Daily Drivers & Core Stack
+              </h3>
+            </div>
+            <span className="font-hand text-sm font-bold text-muted-foreground">
+              Go-to tools ⚡
+            </span>
+          </div>
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {DAILY_DRIVERS.map((driver) => {
+              const IconComp = driver.icon;
+              return (
+                <div
+                  key={driver.name}
+                  data-reveal
+                  className={cn(
+                    'group relative rounded-2xl border-2 border-ink bg-card p-4 sm:p-5 shadow-pop transition-all duration-300 ease-bounce hover:-translate-y-1',
+                    driver.shadow,
+                  )}
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-display text-lg font-black text-ink">
+                        {driver.name}
+                      </h4>
+                      <p className="font-display text-xs font-bold uppercase tracking-wide text-accent">
+                        {driver.role}
+                      </p>
+                    </div>
+                    <span
+                      className={cn(
+                        'grid size-9 place-items-center rounded-xl border-2 border-ink',
+                        driver.bg,
+                      )}
+                    >
+                      <IconComp size={18} strokeWidth={2.5} />
+                    </span>
+                  </div>
+                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                    {driver.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Categorized Technical Directory */}
         <div className="relative mt-14">
-          <svg
-            className="pointer-events-none absolute inset-0 hidden h-full w-full text-ink/20 lg:block"
-            viewBox="0 0 1000 400"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M20 90 C 260 20, 520 200, 980 80"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeDasharray="10 12"
-              strokeLinecap="round"
-            />
-          </svg>
+          <div className="mb-6 flex items-center justify-between">
+            <h3 className="font-display text-sm font-extrabold uppercase tracking-wider text-muted-foreground">
+              Complete Technical Directory
+            </h3>
+            <span className="text-xs font-semibold text-muted-foreground">
+              5 Disciplines
+            </span>
+          </div>
 
           <div className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((group) => {
               const Icon = ICONS[group.icon];
+              const desc = GROUP_DESCRIPTIONS[group.id] || '';
+
               return (
                 <StickerCard
                   key={group.id}
@@ -48,18 +191,35 @@ export function Skills() {
                   title={group.title}
                   accent={group.color}
                   icon={<Icon size={20} strokeWidth={2.5} />}
+                  className="flex flex-col justify-between"
                 >
-                  <ul className="mt-4 space-y-2">
-                    {group.items.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-ink/80">
-                        <span
-                          className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
-                          aria-hidden="true"
-                        />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div>
+                    {desc ? (
+                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                        {desc}
+                      </p>
+                    ) : null}
+
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {group.items.map((item) => {
+                        const styles = PILL_STYLES[group.color];
+                        return (
+                          <span
+                            key={item}
+                            className={cn(
+                              'inline-flex items-center gap-1.5 rounded-xl border-2 px-3 py-1 text-xs font-bold text-ink transition-all duration-200 ease-bounce hover:-translate-y-0.5 hover:shadow-pop cursor-default',
+                              styles.pill,
+                            )}
+                          >
+                            <span
+                              className={cn('size-1.5 rounded-full', styles.dot)}
+                            />
+                            {item}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </StickerCard>
               );
             })}

@@ -6,7 +6,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative px-6 pb-12 pt-16">
+    <footer className="relative px-4 sm:px-6 pb-10 pt-12 sm:pb-12 sm:pt-16">
       <Squiggle className="absolute inset-x-0 top-0 mx-auto h-3 w-full max-w-6xl text-accent" />
 
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 text-center">

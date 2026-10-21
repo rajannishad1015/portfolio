@@ -13,7 +13,7 @@ export function PortraitDecorations() {
     >
       {/* Top-left dot matrix */}
       <div
-        className="absolute -left-1 sm:-left-3 -top-1 h-16 w-20 opacity-75"
+        className="absolute -left-1 sm:-left-3 -top-1 h-10 w-12 sm:h-16 sm:w-20 opacity-75"
         style={{
           backgroundImage:
             'radial-gradient(circle, rgba(30,41,59,0.55) 1.8px, transparent 1.9px)',
@@ -23,7 +23,7 @@ export function PortraitDecorations() {
 
       {/* Top-left purple triangle */}
       <svg
-        className="absolute -rotate-12 left-[5%] sm:left-[6%] lg:left-[7%] top-[6%] sm:top-[5%] lg:top-[4%] w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-accent z-0"
+        className="absolute -rotate-12 left-[5%] sm:left-[6%] lg:left-[7%] top-[6%] sm:top-[5%] lg:top-[4%] w-10 h-10 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-accent z-0"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
@@ -46,7 +46,7 @@ export function PortraitDecorations() {
 
       {/* Emerald squiggle on the left edge of the yellow circle */}
       <svg
-        className="absolute -left-4 sm:-left-6 lg:-left-7 top-[44%] sm:top-[42%] lg:top-[41%] w-20 h-10 sm:w-24 sm:h-12 lg:w-28 lg:h-14 text-[#06d6a0] z-20"
+        className="absolute -left-2 sm:-left-6 lg:-left-7 top-[44%] sm:top-[42%] lg:top-[41%] w-12 h-6 sm:w-24 sm:h-12 lg:w-28 lg:h-14 text-[#06d6a0] z-20"
         viewBox="0 0 100 40"
         fill="none"
         stroke="currentColor"
