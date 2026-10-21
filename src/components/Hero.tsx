@@ -17,14 +17,14 @@ export function Hero() {
     >
       <SectionDecorations />
 
-      <div className="relative mx-auto grid max-w-[90rem] items-center gap-x-8 gap-y-8 sm:gap-y-12 lg:grid-cols-[1fr_1.1fr] xl:grid-cols-[1fr_1.15fr] lg:gap-y-0">
+      <div className="relative mx-auto grid max-w-[90rem] items-center gap-x-8 gap-y-6 sm:gap-y-10 lg:grid-cols-[1fr_1.1fr] xl:grid-cols-[1fr_1.15fr] lg:gap-y-0">
         {/* Copy */}
         <div className="lg:col-start-1 lg:row-start-1">
           <HeroContent />
         </div>
 
-        {/* Portrait stage */}
-        <div className="animate-enter-scale relative mx-auto w-full max-w-[21.5rem] sm:max-w-[36rem] lg:max-w-[42rem] xl:max-w-[44rem] lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        {/* Portrait stage — hidden on mobile/tablet, shown only on desktop */}
+        <div className="animate-enter-scale relative mx-auto w-full max-w-[21.5rem] sm:max-w-[36rem] lg:max-w-[42rem] xl:max-w-[44rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 hidden lg:block">
           <div className="relative aspect-square w-full">
             <PortraitDecorations />
             <PortraitFrame />
