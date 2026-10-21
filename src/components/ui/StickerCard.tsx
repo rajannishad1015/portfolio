@@ -40,7 +40,7 @@ export function StickerCard({
   return (
     <article
       className={cn(
-        'relative rounded-2xl border-2 border-ink bg-card p-5 pt-8 sm:p-6 sm:pt-9 transition-all duration-300 ease-out-soft hover:-translate-y-[3px]',
+        'relative rounded-2xl border-2 border-ink bg-card p-3.5 pt-6 sm:p-6 sm:pt-9 transition-all duration-300 ease-out-soft hover:-translate-y-[3px]',
         shadowClasses[shadow],
         className,
       )}
@@ -49,7 +49,7 @@ export function StickerCard({
       {icon ? (
         <span
           className={cn(
-            'absolute -top-5 left-5 grid size-11 place-items-center rounded-full border-2 border-ink',
+            'absolute -top-3.5 sm:-top-5 left-3.5 sm:left-5 grid size-8 sm:size-11 place-items-center rounded-full border-2 border-ink',
             accentClasses[accent],
           )}
           aria-hidden="true"
@@ -58,7 +58,7 @@ export function StickerCard({
         </span>
       ) : null}
       {title ? (
-        <h3 className="font-display text-xl font-bold text-ink">{title}</h3>
+        <h3 className="font-display text-sm sm:text-xl font-bold text-ink">{title}</h3>
       ) : null}
       {children}
     </article>

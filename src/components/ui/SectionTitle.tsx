@@ -19,7 +19,7 @@ export function SectionTitle({ eyebrow, title, lead, index }: SectionTitleProps)
       </h2>
       <Squiggle className="mt-2.5 sm:mt-3 h-2.5 sm:h-3 w-28 sm:w-32 text-pop" />
       {lead ? (
-        <p className="mt-4 sm:mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-2.5 sm:mt-5 text-sm sm:text-lg leading-relaxed text-muted-foreground">
           {lead}
         </p>
       ) : null}
