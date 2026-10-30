@@ -26,6 +26,8 @@ export function PortraitFrame({ className = '' }: { className?: string }) {
           alt={portraitAlt}
           width={880}
           height={1201}
+          fetchPriority="high"
+          decoding="async"
           className="h-full w-full object-contain object-bottom"
           style={{
             maskImage:

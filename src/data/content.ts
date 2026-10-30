@@ -30,7 +30,7 @@ export const profile = {
   portraitAlt:
     'Illustrated portrait of Rajan Nishad in a suit giving a thumbs up',
   about:
-    'I am a final-year B.Sc. Data Science student at Kes Shroff College, Mumbai. My background is in statistics, data analytics, and applied machine learning, combined with hands-on full-stack development skills. I build end-to-end projects using Python (Scikit-learn, Pandas, NumPy), SQL databases, and web frameworks like FastAPI and Next.js. I focus on writing clean, modular code and solving real practical problems with data. I am actively seeking internship and entry-level Data Analyst or Junior Data Scientist opportunities in Mumbai.',
+    'I am Rajan Nishad, a final-year B.Sc. Data Science student at Kes Shroff College, Mumbai. My background is in statistics, data analytics, and applied machine learning, combined with hands-on full-stack development skills. I build end-to-end projects using Python (Scikit-learn, Pandas, NumPy), SQL databases, and web frameworks like FastAPI and Next.js. I focus on writing clean, modular code and solving real practical problems with data. I am actively seeking internship and entry-level Data Analyst or Junior Data Scientist opportunities in Mumbai.',
   softSkills: SOFT_SKILLS,
 } as const;
 

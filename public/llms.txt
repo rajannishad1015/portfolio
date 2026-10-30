@@ -1,0 +1,27 @@
+# Rajan Nishad
+
+> Data Scientist, Machine Learning Engineer & Full-Stack Builder based in Mumbai, India.
+
+- Name: Rajan Nishad
+- Role: Data Scientist & Full-Stack Builder
+- Location: Mumbai, Maharashtra, India
+- Education: Kes Shroff College, Mumbai (B.Sc. Data Science, 2024–2027)
+- Website: https://rajann.me/
+- GitHub: https://github.com/Rajannishad1015
+- LinkedIn: https://linkedin.com/in/rajanishad
+- Contact: rajannishad1015@gmail.com / +91 96198 72801
+
+## Professional Summary
+Rajan Nishad is a Data Science practitioner specializing in practical machine learning, predictive modeling, statistical analysis, and building production-ready data applications. Actively open to Data Scientist, Machine Learning Engineer, and Data Analyst roles in Mumbai.
+
+## Technical Skills
+- Data Science & ML: Python, Scikit-learn, PyTorch, Pandas, NumPy, XGBoost, Survival Analysis, Causal Uplift Modeling, NLP, Computer Vision
+- Business Intelligence & Analytics: Power BI, Tableau, Excel, SQL (PostgreSQL, MySQL), Data Storytelling
+- Full-Stack & Engineering: FastAPI, Next.js, React, TypeScript, Docker, REST APIs, Git, AWS
+
+## Featured Projects
+- Swara Digital: Freelance music distribution platform allowing independent artists to publish to 150+ stores with zero commission. URL: https://www.swaradigital.in/
+- RetentionIQ: Survival-based churn modeling capstone using Cox Proportional Hazards and causal uplift ranking.
+- DocuCat AI: Multi-model document categorization and entity extraction platform covering 12 document categories.
+- E-Commerce Recommender: Hybrid recommendation engine combining TF-IDF content similarity with collaborative filtering.
+- MARG: Multi-modal adaptive route generation with computer vision risk scoring.

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://rajann.me/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://rajann.me/og-image.png</image:loc>
+      <image:title>Rajan Nishad | Data Scientist &amp; Full-Stack Builder</image:title>
+      <image:caption>Portfolio preview card for Rajan Nishad</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://rajann.me/images/rajan-portrait.webp</image:loc>
+      <image:title>Rajan Nishad Portrait</image:title>
+      <image:caption>Portrait of Rajan Nishad, Data Scientist based in Mumbai</image:caption>
+    </image:image>
+  </url>
+</urlset>
