@@ -1,9 +1,55 @@
-import { Clock, Github, Linkedin, Mail, MapPin, Phone, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Clock, Copy, Github, Linkedin, Mail, MapPin, Phone, Sparkles } from 'lucide-react';
 import { links } from '../data/content';
 import { useReveal } from '../hooks/useReveal';
 import { CandyLink } from './ui/CandyButton';
 import { DotGrid } from './ui/DotGrid';
 import { SectionTitle } from './ui/SectionTitle';
+
+
+function CopyBadge({
+  text,
+  label,
+  icon: Icon,
+  accentClass,
+}: {
+  text: string;
+  label: string;
+  icon: typeof Mail;
+  accentClass: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    } catch {
+      // fallback
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title={`Click to copy ${label}`}
+      aria-label={`Copy ${label}: ${text}`}
+      className="group relative inline-flex items-center gap-2 rounded-xl border-1.5 border-ink/20 bg-sand/90 px-3.5 py-2 font-mono text-xs sm:text-sm font-bold text-ink/90 shadow-sm transition-all duration-200 hover:border-ink hover:bg-cream hover:shadow-xs active:scale-[0.98] cursor-pointer text-left"
+    >
+      {copied ? (
+        <Check size={14} className="text-emerald-600 shrink-0" strokeWidth={3} />
+      ) : (
+        <Icon size={14} className={`${accentClass} shrink-0`} strokeWidth={2.5} />
+      )}
+      <span className="break-all">{text}</span>
+      <span className="ml-1 inline-flex items-center gap-1 rounded-md bg-ink/10 px-1.5 py-0.5 text-[10px] font-sans font-bold uppercase tracking-wider text-ink/70 group-hover:bg-accent group-hover:text-white transition-colors">
+        {copied ? 'Copied! ✓' : <><Copy size={10} /> Copy</>}
+      </span>
+    </button>
+  );
+}
 
 export function Contact() {
   const ref = useReveal<HTMLElement>();
@@ -82,15 +128,19 @@ export function Contact() {
               </div>
 
               {/* Direct Details Display */}
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-ink/10 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 font-mono text-xs sm:text-sm font-bold text-ink/80">
-                <span className="inline-flex items-center gap-1.5 rounded-xl border border-ink/20 bg-sand/60 px-3 py-1.5 shadow-sm break-all">
-                  <Mail size={13} className="text-accent shrink-0" />
-                  {links.email}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-xl border border-ink/20 bg-sand/60 px-3 py-1.5 shadow-sm">
-                  <Phone size={13} className="text-pop shrink-0" />
-                  {links.phone}
-                </span>
+              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-ink/10 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
+                <CopyBadge
+                  text={links.email}
+                  label="Email"
+                  icon={Mail}
+                  accentClass="text-accent"
+                />
+                <CopyBadge
+                  text={links.phone}
+                  label="Phone"
+                  icon={Phone}
+                  accentClass="text-pop"
+                />
               </div>
             </div>
           </div>

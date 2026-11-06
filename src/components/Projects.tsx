@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { RetentionSimulator } from './ui/RetentionSimulator';
 import { Check, ExternalLink, Github } from 'lucide-react';
 import { projects } from '../data/content';
 import { useReveal } from '../hooks/useReveal';
@@ -6,6 +7,24 @@ import { SectionTitle } from './ui/SectionTitle';
 import { StickerCard } from './ui/StickerCard';
 
 type Project = (typeof projects)[number];
+
+const PROJECT_CATEGORIES = [
+  { id: 'all', label: 'All Projects (5)' },
+  { id: 'ml', label: 'Machine Learning & AI (4)' },
+  { id: 'web', label: 'Full-Stack & Web (2)' },
+  { id: 'cv-nlp', label: 'Computer Vision & NLP (2)' },
+] as const;
+
+type CategoryId = (typeof PROJECT_CATEGORIES)[number]['id'];
+
+const PROJECT_CATEGORY_MAP: Record<string, CategoryId[]> = {
+  'swara-digital': ['web'],
+  'retention-iq': ['ml'],
+  'docucat-ai': ['ml', 'cv-nlp'],
+  'ecommerce-recommender': ['ml', 'web'],
+  'marg-autonomous-routing': ['ml', 'cv-nlp'],
+};
+
 
 const isPlaceholder = (url: string) => url === '#' || url.length === 0;
 
@@ -148,6 +167,11 @@ function ProjectLinks({ project }: { project: Project }) {
 
 export function Projects() {
   const ref = useReveal<HTMLElement>();
+  const [activeCategory, setActiveCategory] = useState<CategoryId>('all');
+
+  const filteredProjects = activeCategory === 'all'
+    ? projects
+    : projects.filter((p) => PROJECT_CATEGORY_MAP[p.id]?.includes(activeCategory));
 
   return (
     <section
@@ -163,8 +187,29 @@ export function Projects() {
           lead="Five production builds that show the range: a full-stack platform, survival-based uplift ML, multi-model document intelligence, hybrid recommendation systems, and autonomous telemetry."
         />
 
-        <div className="mt-6 sm:mt-14 grid gap-4 sm:gap-8 md:grid-cols-2">
-          {projects.map((project) => (
+                {/* Category Filter Pills */}
+        <div className="mt-6 sm:mt-10 flex flex-wrap gap-2 sm:gap-2.5">
+          {PROJECT_CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setActiveCategory(cat.id)}
+                className={`rounded-full border-1.5 sm:border-2 border-ink px-3 sm:px-4 py-1 sm:py-1.5 font-display text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-accent text-white shadow-pop -translate-y-0.5'
+                    : 'bg-card text-ink hover:bg-cream'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-8 md:grid-cols-2">
+          {filteredProjects.map((project) => (
             <StickerCard
               key={project.id}
               data-reveal
@@ -200,6 +245,8 @@ export function Projects() {
             </StickerCard>
           ))}
         </div>
+
+        <RetentionSimulator />
       </div>
     </section>
   );

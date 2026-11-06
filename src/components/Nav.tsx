@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowRight, Menu, X } from 'lucide-react';
-import { navLinks, sectionIds } from '../data/content';
+import { ArrowRight, FileText, Menu, X } from 'lucide-react';
+import { links, navLinks, sectionIds } from '../data/content';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { cn } from '../lib/cn';
 import { BrandLogo } from './hero/BrandLogo';
@@ -75,7 +75,16 @@ export function Nav() {
         ))}
       </nav>
 
-      <div className="pt-4 border-t-2 border-ink/10">
+      <div className="pt-4 border-t-2 border-ink/10 flex flex-col gap-3">
+        <a
+          href={links.resumeHref}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-sun/40 px-5 font-display text-sm font-bold text-ink shadow-pop active:translate-x-[2px] active:translate-y-[2px]"
+        >
+          <FileText size={16} strokeWidth={2.5} />
+          Download Resume
+        </a>
         <a
           href="#contact"
           onClick={() => setOpen(false)}
@@ -133,7 +142,17 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <a
+            href={links.resumeHref}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Download Resume"
+            className="hidden sm:inline-flex min-h-11 items-center gap-1.5 rounded-full border-2 border-ink bg-sun/40 px-4 font-display text-sm font-bold text-ink shadow-pop transition-[transform,box-shadow] duration-300 ease-bounce hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-pop-hover active:translate-x-[2px] active:translate-y-[2px]"
+          >
+            <FileText size={15} strokeWidth={2.5} />
+            Resume
+          </a>
           <a
             href="#contact"
             className="group hidden min-h-11 items-center gap-2.5 rounded-full border-2 border-ink bg-accent px-5 font-display text-sm font-bold text-accent-foreground shadow-pop transition-[transform,box-shadow] duration-300 ease-bounce hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-pop-hover active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-active sm:inline-flex"
